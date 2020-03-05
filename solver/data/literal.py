@@ -11,7 +11,8 @@ class Literal:
         return self.__value
 
     def __str__(self):
-        return f'{self.__num_variable}'
+        char = '-' if not self.__value else ''
+        return f'{char}{self.__num_variable}'
 
     def __le__(self, other):
         return self.__num_variable <= other.get_value()
