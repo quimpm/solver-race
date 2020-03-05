@@ -1,6 +1,6 @@
-from literal import Literal
-from clause import Clause
-from formula import Formula 
+from .literal import Literal
+from .clause import Clause
+from .formula import Formula
 
 class Parser:
 
