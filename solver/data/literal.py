@@ -11,7 +11,26 @@ class Literal:
         return self.__value
 
     def __str__(self):
-        return f'{self.__num_variable}'
+        char = '-' if not self.__value else ''
+        return f'{char}{self.__num_variable}'
+
+    def __le__(self, other):
+        return self.__num_variable <= other.get_value()
+
+    def __ge__(self, other):
+        return self.__num_variable >= other.get_value()
+
+    def __eq__(self, other):
+        return self.__num_variable == other.get_value()
+
+    def __lt__(self, other):
+        return not self.__ge__(other)
+
+    def __gt__(self, other):
+        return not self.__le__(other)
+
+    def __ne__(self, other):
+        return not self.__eq__(other)
 
     @staticmethod
     def from_string(req: str):
