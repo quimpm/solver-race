@@ -1,6 +1,6 @@
 from typing import List
 
-from . import Literal
+from solver.data.literal import Literal
 
 
 class Clause:
