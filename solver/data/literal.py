@@ -1,18 +1,19 @@
 class Literal:
 
-    def __init__(self, num_variable: int, value: bool):
+    def __init__(self, num_variable: int):
         self.__num_variable = num_variable
-        self.__value = value
 
-    def get_id(self):
+    def get_var(self):
         return self.__num_variable
 
+    def get_id(self):
+        return abs(self.__num_variable)
+
     def get_value(self):
-        return self.__value
+        return self.__num_variable > 0
 
     def __str__(self):
-        char = '-' if not self.__value else ''
-        return f'{char}{self.__num_variable}'
+        return f'{self.__num_variable}'
 
     def __le__(self, other):
         return self.__num_variable <= other.get_value()
@@ -34,4 +35,4 @@ class Literal:
 
     @staticmethod
     def from_string(req: str):
-        return Literal(abs(int(req)), int(req) > 0)
+        return Literal(int(req))

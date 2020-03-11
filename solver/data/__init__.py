@@ -1,5 +1,5 @@
 
-from .parser import Parser
-from .literal import Literal
-from .clause import Clause
-from .formula import Formula
+from solver.data.parser import Parser
+from solver.data.literal import Literal
+from solver.data.clause import Clause
+from solver.data.formula import Formula
