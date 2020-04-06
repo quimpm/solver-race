@@ -15,15 +15,17 @@ class FracaSAT(object):
 
 
 def get_rnd_interpretation(fracaSAT):
-    cost_clauses = [0 for _ in range(fracaSAT.num_clauses)]
     inter = [random.choice([-1, 1]) * (x + 1) for x in range(fracaSAT.num_vars)]
     for lit in fracaSAT.not_found:
         inter[abs(lit) - 1] = -lit
+    return inter
+
+def caluculate_clauses_cost(fracaSAT, inter):
+    cost_clauses = [0 for _ in range(fracaSAT.num_clauses)]
     for lit in inter:
         for c in fracaSAT.formula[lit]:
             cost_clauses[c] += 1
-    return inter, cost_clauses
-
+    return cost_clauses
 
 def satisfies(cost_clauses):
     return all(map(lambda x: x > 0, cost_clauses))
@@ -32,12 +34,20 @@ def satisfies(cost_clauses):
 def find_unsat_clause(cost_clauses):
     return random.choice(list(filter(lambda x: x[1] == 0, enumerate(cost_clauses))))[0]
 
-def find_all_unsat_clauses(cost_clauses, vars, clauses):
-    return [ [var, list(map(lambda x : x[0], filter(lambda x: x[1] == 0 and (var in clauses[x[0]]), enumerate(cost_clauses))))] for var in vars ]
+def find_all_unsat_clauses(inter, vars, fracasat):
+    current_inter = inter
+    inter_change_cost = []
+    for var in vars:
+        current_inter[abs(var)-1] = -var
+        inter_change_cost.append([var, caluculate_clauses_cost(fracasat, current_inter)])
+        current_inter=inter 
+    #return [ [var, list(map(lambda x : x[0], filter(lambda x: x[1] == 0 and (var in fracasat.clauses[x[0]]), inter_array)))] for var in vars ]
+    return [ [var, list(map(lambda x : x[0], filter(lambda x: x[1] == 0 and (var in fracasat.clauses[x[0]]), enumerate(cost_clauses))))] for var, cost_clauses in inter_change_cost]
 
 def walk_sat(max_tries, max_flips, fracasat):
     for i in range(max_tries):
-        inter, cost_clauses = get_rnd_interpretation(fracasat)
+        inter = get_rnd_interpretation(fracasat)
+        cost_clauses = caluculate_clauses_cost(fracasat, inter)
         print(inter)
         print(cost_clauses)
         for j in range(max_flips):
@@ -45,8 +55,10 @@ def walk_sat(max_tries, max_flips, fracasat):
                 return inter
             clause_unsat = find_unsat_clause(cost_clauses)
             vars = fracasat.clauses[clause_unsat]
-            unsat_var_clauses = find_all_unsat_clauses(cost_clauses, vars, fracasat.clauses)
+            unsat_var_clauses = find_all_unsat_clauses(cost_clauses, vars, fracasat)
+            print(unsat_var_clauses)
             broken = min(unsat_var_clauses, key = lambda x : len(x[1]))
+            print(broken)
             
 
 def get_formula(file_name) -> FracaSAT:
@@ -84,10 +96,6 @@ def main():
         print('NOT_FOUND:', fracaSAT.not_found)
         print('NUM_CLAUSES:', fracaSAT.num_clauses)
         print('CLAUSES:', fracaSAT.clauses)
-        interpretation, cost_clauses = get_rnd_interpretation(fracaSAT)
-        print('RNDM INTERPRETATION:', interpretation)
-        print('COST OF EACH CLAUSES:', cost_clauses)
-        print('DOES IT SATISFY?', satisfies(cost_clauses))
     walk_sat(1, 1, fracaSAT)
 
 
