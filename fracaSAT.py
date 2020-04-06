@@ -32,25 +32,23 @@ def satisfies(cost_clauses):
 def find_unsat_clause(cost_clauses):
     return random.choice(list(filter(lambda x: x[1] == 0, enumerate(cost_clauses))))[0]
 
+def find_all_unsat_clauses(cost_clauses, vars, clauses):
+    return [ [var, list(map(lambda x : x[0], filter(lambda x: x[1] == 0 and (var in clauses[x[0]]), enumerate(cost_clauses))))] for var in vars ]
 
 def walk_sat(max_tries, max_flips, fracasat):
     for i in range(max_tries):
         inter, cost_clauses = get_rnd_interpretation(fracasat)
         print(inter)
+        print(cost_clauses)
         for j in range(max_flips):
             if satisfies(cost_clauses):
-                print("Satisfies----------------")
-                print(iter)
                 return inter
             clause_unsat = find_unsat_clause(cost_clauses)
             vars = fracasat.clauses[clause_unsat]
-            print(clause_unsat)
-            print(vars)
+            unsat_var_clauses = find_all_unsat_clauses(cost_clauses, vars, fracasat.clauses)
+            broken = min(unsat_var_clauses, key = lambda x : len(x[1]))
+            
 
-<<<<<<< HEAD
-
-=======
->>>>>>> 209de5bdd49f22578127f406abbfa366e44b57d5
 def get_formula(file_name) -> FracaSAT:
     with open(file_name) as file:
         lines = file.readlines()
@@ -79,12 +77,18 @@ def main():
         sys.exit()
     else:
         fracaSAT = get_formula(sys.argv[1])
-    print('FORMULA:', fracaSAT.formula)
-    interpretation, cost_clauses = get_rnd_interpretation(fracaSAT)
-    print('RNDM INTERPRETATION:', interpretation)
-    print('COST OF EACH CLAUSES:', cost_clauses)
-    print('DOES IT SATISFY?', satisfies(cost_clauses))
-    walk_sat(10, 10, fracaSAT)
+    debug = True
+    if debug:
+        print('FORMULA:', fracaSAT.formula)
+        print('NUM_VARS:', fracaSAT.num_vars)
+        print('NOT_FOUND:', fracaSAT.not_found)
+        print('NUM_CLAUSES:', fracaSAT.num_clauses)
+        print('CLAUSES:', fracaSAT.clauses)
+        interpretation, cost_clauses = get_rnd_interpretation(fracaSAT)
+        print('RNDM INTERPRETATION:', interpretation)
+        print('COST OF EACH CLAUSES:', cost_clauses)
+        print('DOES IT SATISFY?', satisfies(cost_clauses))
+    walk_sat(1, 1, fracaSAT)
 
 
 if __name__ == '__main__':
