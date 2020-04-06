@@ -47,7 +47,10 @@ def walk_sat(max_tries, max_flips, fracasat):
             print(clause_unsat)
             print(vars)
 
+<<<<<<< HEAD
 
+=======
+>>>>>>> 209de5bdd49f22578127f406abbfa366e44b57d5
 def get_formula(file_name) -> FracaSAT:
     with open(file_name) as file:
         lines = file.readlines()
