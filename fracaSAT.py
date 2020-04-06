@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 import sys
 import random
+import numpy
 
 
 class FracaSAT(object):
@@ -38,12 +39,13 @@ def walk_sat(max_tries, max_flips, fracasat):
         print(inter)
         for j in range(max_flips):
             if satisfies(cost_clauses):
+                print("Satisfies----------------")
+                print(iter)
                 return inter
             c = find_unsat_clause(cost_clauses)
             vars = fracasat.clauses[c]
-            print(c)
-            print(vars)
-
+            b = min([[p,cost_clauses[abs(p) - 1]] for p in vars ], key = lambda x : x[1])
+            print(b)
 
 def get_formula(file_name) -> FracaSAT:
     with open(file_name) as file:
