@@ -35,27 +35,30 @@ def find_unsat_clause(cost_clauses):
     return random.choice(list(filter(lambda x: x[1] == 0, enumerate(cost_clauses))))[0]
 
 def find_all_unsat_clauses(inter, vars, fracasat):
-    current_inter = inter
+    current_inter = inter.copy()
     inter_change_cost = []
     for var in vars:
-        current_inter[abs(var)-1] = -var
+        print('VAR: ', var)
+        current_inter[abs(var)-1] = -current_inter[abs(var)-1]
+        print('CURRENT_INTERPRETATION: ', current_inter)
         inter_change_cost.append([var, caluculate_clauses_cost(fracasat, current_inter)])
-        current_inter=inter 
-    #return [ [var, list(map(lambda x : x[0], filter(lambda x: x[1] == 0 and (var in fracasat.clauses[x[0]]), inter_array)))] for var in vars ]
-    return [ [var, list(map(lambda x : x[0], filter(lambda x: x[1] == 0 and (var in fracasat.clauses[x[0]]), enumerate(cost_clauses))))] for var, cost_clauses in inter_change_cost]
+        current_inter=inter.copy() 
+    print('INTER_CHANGE_COST: ',inter_change_cost)
+    return [ [var, list(filter( lambda x : x[1] == 0, enumerate(cost_clause))) ] for var, cost_clause in inter_change_cost]
 
 def walk_sat(max_tries, max_flips, fracasat):
     for i in range(max_tries):
         inter = get_rnd_interpretation(fracasat)
         cost_clauses = caluculate_clauses_cost(fracasat, inter)
-        print(inter)
-        print(cost_clauses)
+        print('ORIGINAL INTERPRETATION: ',inter)
+        print('ORIGINAL COST CLAUSES: ',cost_clauses)
         for j in range(max_flips):
             if satisfies(cost_clauses):
                 return inter
             clause_unsat = find_unsat_clause(cost_clauses)
             vars = fracasat.clauses[clause_unsat]
-            unsat_var_clauses = find_all_unsat_clauses(cost_clauses, vars, fracasat)
+            print('VARS OUTSIDE: ',vars)
+            unsat_var_clauses = find_all_unsat_clauses(inter, vars, fracasat)
             print(unsat_var_clauses)
             broken = min(unsat_var_clauses, key = lambda x : len(x[1]))
             print(broken)
