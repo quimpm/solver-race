@@ -42,18 +42,10 @@ def walk_sat(max_tries, max_flips, fracasat):
                 print("Satisfies----------------")
                 print(iter)
                 return inter
-<<<<<<< HEAD
-            c = find_unsat_clause(cost_clauses)
-            vars = fracasat.clauses[c]
-            b = min([[p,cost_clauses[abs(p) - 1]] for p in vars ], key = lambda x : x[1])
-            print(b)
-=======
             clause_unsat = find_unsat_clause(cost_clauses)
             vars = fracasat.clauses[clause_unsat]
             print(clause_unsat)
             print(vars)
-
->>>>>>> 2eb78cb904268bef3110cd162828d93810a8ca02
 
 def get_formula(file_name) -> FracaSAT:
     with open(file_name) as file:
