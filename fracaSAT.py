@@ -46,7 +46,7 @@ def find_all_unsat_clauses(inter, vars, fracasat):
     print('INTER_CHANGE_COST: ',inter_change_cost)
     return [ [var, list(filter( lambda x : x[1] == 0, enumerate(cost_clause))) ] for var, cost_clause in inter_change_cost]
 
-def walk_sat(max_tries, max_flips, fracasat):
+def walk_sat(max_tries, max_flips, fracasat, prob):
     for i in range(max_tries):
         inter = get_rnd_interpretation(fracasat)
         cost_clauses = caluculate_clauses_cost(fracasat, inter)
@@ -59,9 +59,17 @@ def walk_sat(max_tries, max_flips, fracasat):
             vars = fracasat.clauses[clause_unsat]
             print('VARS OUTSIDE: ',vars)
             unsat_var_clauses = find_all_unsat_clauses(inter, vars, fracasat)
-            print(unsat_var_clauses)
+            print('CLAUSES NOT SATISFIED BY CHANGED LITERALS: ',unsat_var_clauses)
             broken = min(unsat_var_clauses, key = lambda x : len(x[1]))
-            print(broken)
+            print('BROKEN: ', broken)
+            if len(broken[1]) > 0 and random.random() < prob:
+                substitute = random.choice(vars)
+                print('SUBSTITUT_1: ', substitute)
+            else:
+                substitute = broken[0]
+                print('SUBSTITUT_2: ', substitute)
+            inter[abs(substitute)-1] = substitute
+            print('NEW_INTER: ', inter)
             
 
 def get_formula(file_name) -> FracaSAT:
@@ -99,7 +107,8 @@ def main():
         print('NOT_FOUND:', fracaSAT.not_found)
         print('NUM_CLAUSES:', fracaSAT.num_clauses)
         print('CLAUSES:', fracaSAT.clauses)
-    walk_sat(1, 1, fracaSAT)
+    print(walk_sat(10, 10, fracaSAT, 0.8))
+    
 
 
 if __name__ == '__main__':
