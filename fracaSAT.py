@@ -39,9 +39,9 @@ def walk_sat(max_tries, max_flips, fracasat):
         for j in range(max_flips):
             if satisfies(cost_clauses):
                 return inter
-            c = find_unsat_clause(cost_clauses)
-            vars = fracasat.clauses[c]
-            print(c)
+            clause_unsat = find_unsat_clause(cost_clauses)
+            vars = fracasat.clauses[clause_unsat]
+            print(clause_unsat)
             print(vars)
 
 
@@ -73,11 +73,11 @@ def main():
         sys.exit()
     else:
         fracaSAT = get_formula(sys.argv[1])
-    print(fracaSAT.formula)
+    print('FORMULA:', fracaSAT.formula)
     interpretation, cost_clauses = get_rnd_interpretation(fracaSAT)
-    print(interpretation)
-    print(cost_clauses)
-    print(satisfies(cost_clauses))
+    print('RNDM INTERPRETATION:', interpretation)
+    print('COST OF EACH CLAUSES:', cost_clauses)
+    print('DOES IT SATISFY?', satisfies(cost_clauses))
     walk_sat(10, 10, fracaSAT)
 
 
