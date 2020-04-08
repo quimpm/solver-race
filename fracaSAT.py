@@ -70,6 +70,7 @@ def walk_sat(max_tries, max_flips, fracasat, prob):
                 print('SUBSTITUT_2: ', substitute)
             inter[abs(substitute)-1] = substitute
             print('NEW_INTER: ', inter)
+    return None
             
 
 def get_formula(file_name) -> FracaSAT:
@@ -107,7 +108,11 @@ def main():
         print('NOT_FOUND:', fracaSAT.not_found)
         print('NUM_CLAUSES:', fracaSAT.num_clauses)
         print('CLAUSES:', fracaSAT.clauses)
-    print(walk_sat(10, 10, fracaSAT, 0.8))
+    inter = walk_sat(100, 500, fracaSAT, 0.8)
+    if inter != None:
+        print('SATISFIABLE FOR: ',inter)
+    else:
+        print('UNSATISFIABLE')
     
 
 
