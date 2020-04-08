@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
 import sys
 import random
-import numpy
 
 
 class FracaSAT(object):
@@ -20,12 +19,14 @@ def get_rnd_interpretation(fracaSAT):
         inter[abs(lit) - 1] = -lit
     return inter
 
+
 def caluculate_clauses_cost(fracaSAT, inter):
     cost_clauses = [0 for _ in range(fracaSAT.num_clauses)]
-    for lit in inter:
-        for c in fracaSAT.formula[lit]:
-            cost_clauses[c] += 1
+    for i, c in enumerate(fracaSAT.clauses):
+        for lit in c:
+            cost_clauses[i - 1] += 1 if lit == inter[abs(lit) - 1] else 0
     return cost_clauses
+
 
 def satisfies(cost_clauses):
     return all(map(lambda x: x > 0, cost_clauses))
@@ -34,44 +35,36 @@ def satisfies(cost_clauses):
 def find_unsat_clause(cost_clauses):
     return random.choice(list(filter(lambda x: x[1] == 0, enumerate(cost_clauses))))[0]
 
+
 def find_all_unsat_clauses(inter, vars, fracasat):
     current_inter = inter.copy()
     inter_change_cost = []
     for var in vars:
-        print('VAR: ', var)
-        current_inter[abs(var)-1] = -current_inter[abs(var)-1]
-        print('CURRENT_INTERPRETATION: ', current_inter)
+        current_inter[abs(var) - 1] = -current_inter[abs(var) - 1]
         inter_change_cost.append([var, caluculate_clauses_cost(fracasat, current_inter)])
-        current_inter=inter.copy() 
-    print('INTER_CHANGE_COST: ',inter_change_cost)
-    return [ [var, list(filter( lambda x : x[1] == 0, enumerate(cost_clause))) ] for var, cost_clause in inter_change_cost]
+        current_inter = inter.copy()
+    return [[var, list(filter(lambda x: x[1] == 0, enumerate(cost_clause)))] for var, cost_clause in inter_change_cost]
+
 
 def walk_sat(max_tries, max_flips, fracasat, prob):
     for i in range(max_tries):
         inter = get_rnd_interpretation(fracasat)
         cost_clauses = caluculate_clauses_cost(fracasat, inter)
-        print('ORIGINAL INTERPRETATION: ',inter)
-        print('ORIGINAL COST CLAUSES: ',cost_clauses)
         for j in range(max_flips):
             if satisfies(cost_clauses):
                 return inter
             clause_unsat = find_unsat_clause(cost_clauses)
             vars = fracasat.clauses[clause_unsat]
-            print('VARS OUTSIDE: ',vars)
             unsat_var_clauses = find_all_unsat_clauses(inter, vars, fracasat)
-            print('CLAUSES NOT SATISFIED BY CHANGED LITERALS: ',unsat_var_clauses)
-            broken = min(unsat_var_clauses, key = lambda x : len(x[1]))
-            print('BROKEN: ', broken)
+            broken = min(unsat_var_clauses, key=lambda x: len(x[1]))
             if len(broken[1]) > 0 and random.random() < prob:
                 substitute = random.choice(vars)
-                print('SUBSTITUT_1: ', substitute)
             else:
                 substitute = broken[0]
-                print('SUBSTITUT_2: ', substitute)
-            inter[abs(substitute)-1] = substitute
-            print('NEW_INTER: ', inter)
+            inter[abs(substitute) - 1] = substitute
+        print(f'NEW MAX_TRY {i}')
     return None
-            
+
 
 def get_formula(file_name) -> FracaSAT:
     with open(file_name) as file:
@@ -108,12 +101,11 @@ def main():
         print('NOT_FOUND:', fracaSAT.not_found)
         print('NUM_CLAUSES:', fracaSAT.num_clauses)
         print('CLAUSES:', fracaSAT.clauses)
-    inter = walk_sat(100, 500, fracaSAT, 0.8)
+    inter = walk_sat(100, 420, fracaSAT, 0.5)
     if inter != None:
-        print('SATISFIABLE FOR: ',inter)
+        print('SATISFIABLE FOR: ', inter)
     else:
         print('UNSATISFIABLE')
-    
 
 
 if __name__ == '__main__':
