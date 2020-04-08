@@ -46,6 +46,35 @@ def find_all_unsat_clauses(inter, vars, fracasat):
     return [[var, list(filter(lambda x: x[1] == 0, enumerate(cost_clause)))] for var, cost_clause in inter_change_cost]
 
 
+def find_actual_cost(cost_clauses):
+    return len(list(filter(lambda x: x == 0, cost_clauses)))
+
+
+def find_best_flipped_vars(inter, cost_clauses, fracasat):
+    current_inter = inter.copy()
+    best_vars = []
+    cost_threshold = find_actual_cost(cost_clauses)
+    for var in inter:
+        if var > 0:
+            cost = len(list(filter(lambda x: x == 1, fracasat.formula[var]))) - len(fracasat.formula[-var])
+        current_inter = inter.copy()
+
+
+
+
+def gsat(max_tries, max_flips, fracasat):
+    for i in range(max_tries):
+        inter = get_rnd_interpretation(fracasat)
+        cost_clauses = caluculate_clauses_cost(fracasat, inter)
+        for j in range(max_flips):
+            if satisfies(cost_clauses):
+                return inter
+            vars = find_best_flipped_vars(inter, fracasat)
+            substitute = random.choice(vars)
+            inter[abs(substitute) - 1] = substitute
+        print(f'NEW MAX_TRY {i}')
+    return None
+
 def walk_sat(max_tries, max_flips, fracasat, prob):
     for i in range(max_tries):
         inter = get_rnd_interpretation(fracasat)
