@@ -8,5 +8,4 @@ class SAT(object):
         self.num_lits: int = formula.get_num_lits()
 
     def get_random_interpretation(self):
-        num_lits = self.parser.get_vars()
         raise NotImplementedError

@@ -11,3 +11,6 @@ class Formula:
     def add_clause(self, clause: List[Literal], index_clause):
         for lit in clause:
             self.clauses[lit.get_var()].append(index_clause)
+
+
+
