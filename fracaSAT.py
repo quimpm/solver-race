@@ -1,8 +1,9 @@
 #!/usr/bin/env python3
 import sys
 import random
-import numpy
+from threading import Event, Timer
 
+stop_event = Event()
 
 class FracaSAT(object):
 
@@ -38,38 +39,29 @@ def find_all_unsat_clauses(inter, vars, fracasat):
     current_inter = inter.copy()
     inter_change_cost = []
     for var in vars:
-        print('VAR: ', var)
         current_inter[abs(var)-1] = -current_inter[abs(var)-1]
-        print('CURRENT_INTERPRETATION: ', current_inter)
         inter_change_cost.append([var, caluculate_clauses_cost(fracasat, current_inter)])
         current_inter=inter.copy() 
-    print('INTER_CHANGE_COST: ',inter_change_cost)
     return [ [var, list(filter( lambda x : x[1] == 0, enumerate(cost_clause))) ] for var, cost_clause in inter_change_cost]
 
-def walk_sat(max_tries, max_flips, fracasat, prob):
-    for i in range(max_tries):
+def walk_sat(max_flips, fracasat, prob):
+    while not stop_event.is_set():
         inter = get_rnd_interpretation(fracasat)
         cost_clauses = caluculate_clauses_cost(fracasat, inter)
-        print('ORIGINAL INTERPRETATION: ',inter)
-        print('ORIGINAL COST CLAUSES: ',cost_clauses)
         for j in range(max_flips):
             if satisfies(cost_clauses):
                 return inter
             clause_unsat = find_unsat_clause(cost_clauses)
             vars = fracasat.clauses[clause_unsat]
-            print('VARS OUTSIDE: ',vars)
             unsat_var_clauses = find_all_unsat_clauses(inter, vars, fracasat)
-            print('CLAUSES NOT SATISFIED BY CHANGED LITERALS: ',unsat_var_clauses)
             broken = min(unsat_var_clauses, key = lambda x : len(x[1]))
-            print('BROKEN: ', broken)
             if len(broken[1]) > 0 and random.random() < prob:
                 substitute = random.choice(vars)
-                print('SUBSTITUT_1: ', substitute)
             else:
                 substitute = broken[0]
-                print('SUBSTITUT_2: ', substitute)
             inter[abs(substitute)-1] = substitute
-            print('NEW_INTER: ', inter)
+            if stop_event.is_set():
+                break
     return None
             
 
@@ -95,26 +87,22 @@ def get_formula(file_name) -> FracaSAT:
                 not_found.append(-i - 1)
         return FracaSAT(formula, num_vars, not_found, num_clauses, clauses)
 
+def send_signal():
+    stop_event.set()
 
 def main():
     if len(sys.argv) != 2:
         sys.exit()
     else:
         fracaSAT = get_formula(sys.argv[1])
-    debug = True
-    if debug:
-        print('FORMULA:', fracaSAT.formula)
-        print('NUM_VARS:', fracaSAT.num_vars)
-        print('NOT_FOUND:', fracaSAT.not_found)
-        print('NUM_CLAUSES:', fracaSAT.num_clauses)
-        print('CLAUSES:', fracaSAT.clauses)
-    inter = walk_sat(100, 500, fracaSAT, 0.8)
+    t = Timer(180, send_signal)
+    t.start()
+    inter = walk_sat(500, fracaSAT, 0.5)
+    t.cancel()
     if inter != None:
-        print('SATISFIABLE FOR: ',inter)
+        print('SATISFIABLE FOR: ', inter)
     else:
         print('UNSATISFIABLE')
     
-
-
 if __name__ == '__main__':
     main()
