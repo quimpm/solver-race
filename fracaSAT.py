@@ -51,16 +51,12 @@ def find_actual_cost(cost_clauses):
 
 
 def find_best_flipped_vars(inter, cost_clauses, fracasat):
-    current_inter = inter.copy()
     best_vars = []
-    cost_threshold = find_actual_cost(cost_clauses)
     for var in inter:
-        if var > 0:
-            cost = len(list(filter(lambda x: x == 1, fracasat.formula[var]))) - len(fracasat.formula[-var])
-        current_inter = inter.copy()
-
-
-
+        cost = len(list(filter(lambda x: cost_clauses[x-1] == 1, fracasat.formula[var]))) - len(fracasat.formula[-var])
+        if cost < 0:
+            best_vars.append(var)
+    return best_vars
 
 def gsat(max_tries, max_flips, fracasat):
     for i in range(max_tries):
@@ -69,9 +65,9 @@ def gsat(max_tries, max_flips, fracasat):
         for j in range(max_flips):
             if satisfies(cost_clauses):
                 return inter
-            vars = find_best_flipped_vars(inter, fracasat)
+            vars = find_best_flipped_vars(inter, cost_clauses, fracasat)
             substitute = random.choice(vars)
-            inter[abs(substitute) - 1] = substitute
+            inter[abs(substitute) - 1] = -substitute
         print(f'NEW MAX_TRY {i}')
     return None
 
@@ -130,7 +126,8 @@ def main():
         print('NOT_FOUND:', fracaSAT.not_found)
         print('NUM_CLAUSES:', fracaSAT.num_clauses)
         print('CLAUSES:', fracaSAT.clauses)
-    inter = walk_sat(100, 420, fracaSAT, 0.5)
+    #inter = walk_sat(100, 420, fracaSAT, 0.5)
+    inter = gsat(1000, 4000,fracaSAT)
     if inter != None:
         print('SATISFIABLE FOR: ', inter)
     else:
