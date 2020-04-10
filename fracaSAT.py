@@ -72,12 +72,16 @@ def gsat(max_flips, fracasat):
             cost_clauses = calculate_clauses_cost(fracasat, inter)
             if satisfies(cost_clauses):
                 return inter
-            vars = find_best_flipped_vars(inter, cost_clauses, fracasat)
-            substitute = random.choice(vars)
-            inter[abs(substitute) - 1] = -substitute
+            gsat_loop(inter, cost_clauses, fracasat)
         if stop_event.is_set():
             break
     return None
+
+
+def gsat_loop(inter, cost_clauses, fracasat):
+    vars = find_best_flipped_vars(inter, cost_clauses, fracasat)
+    substitute = random.choice(vars)
+    inter[abs(substitute) - 1] = -substitute
 
 
 def walk_sat(max_flips, fracasat, prob):
@@ -87,18 +91,23 @@ def walk_sat(max_flips, fracasat, prob):
             cost_clauses = calculate_clauses_cost(fracasat, inter)
             if satisfies(cost_clauses):
                 return inter
-            clause_unsat = find_unsat_clause(cost_clauses)
-            vars = fracasat.clauses[clause_unsat]
-            unsat_var_clauses = find_all_unsat_clauses(inter, vars, fracasat, cost_clauses)
-            broken_var, num_broken_clauses = min(unsat_var_clauses, key=lambda x: x[1])
-            if num_broken_clauses > 0 and random.random() < prob:
-                substitute = random.choice(vars)
-            else:
-                substitute = broken_var
-            inter[abs(substitute)-1] = substitute
+            walk_sat_loop(cost_clauses, fracasat, inter, prob)
             if stop_event.is_set():
                 break
     return None
+
+
+def walk_sat_loop(cost_clauses, fracasat, inter, prob):
+    clause_unsat = find_unsat_clause(cost_clauses)
+    vars = fracasat.clauses[clause_unsat]
+    unsat_var_clauses = find_all_unsat_clauses(inter, vars, fracasat, cost_clauses)
+    broken_var, num_broken_clauses = min(unsat_var_clauses, key=lambda x: x[1])
+    if num_broken_clauses > 0 and random.random() < prob:
+        substitute = random.choice(vars)
+    else:
+        substitute = broken_var
+    inter[abs(substitute) - 1] = substitute
+
 
 def random_walk_gsat(max_flips, fracasat, prob):
     pass
