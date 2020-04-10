@@ -1,6 +1,6 @@
-Fri Apr 10 13:05:01 2020    output_profiling
+Fri Apr 10 13:14:01 2020    output_profiling
 
-         613187200 function calls (613187102 primitive calls) in 180.014 seconds
+         587452004 function calls (587451906 primitive calls) in 180.066 seconds
 
    Ordered by: standard name
 
@@ -11,7 +11,7 @@ Fri Apr 10 13:05:01 2020    output_profiling
        14    0.000    0.000    0.000    0.000 <frozen importlib._bootstrap>:151(__exit__)
        14    0.000    0.000    0.000    0.000 <frozen importlib._bootstrap>:157(_get_module_lock)
        14    0.000    0.000    0.000    0.000 <frozen importlib._bootstrap>:176(cb)
-     20/2    0.000    0.000    0.006    0.003 <frozen importlib._bootstrap>:211(_call_with_frames_removed)
+     20/2    0.000    0.000    0.007    0.003 <frozen importlib._bootstrap>:211(_call_with_frames_removed)
       160    0.000    0.000    0.000    0.000 <frozen importlib._bootstrap>:222(_verbose_message)
         5    0.000    0.000    0.000    0.000 <frozen importlib._bootstrap>:232(_requires_builtin_wrapper)
        14    0.000    0.000    0.000    0.000 <frozen importlib._bootstrap>:307(__init__)
@@ -37,8 +37,8 @@ Fri Apr 10 13:05:01 2020    output_profiling
        32    0.000    0.000    0.000    0.000 <frozen importlib._bootstrap>:843(__enter__)
        32    0.000    0.000    0.000    0.000 <frozen importlib._bootstrap>:847(__exit__)
        14    0.000    0.000    0.001    0.000 <frozen importlib._bootstrap>:870(_find_spec)
-     14/2    0.000    0.000    0.007    0.004 <frozen importlib._bootstrap>:936(_find_and_load_unlocked)
-     14/2    0.000    0.000    0.007    0.004 <frozen importlib._bootstrap>:966(_find_and_load)
+     14/2    0.000    0.000    0.008    0.004 <frozen importlib._bootstrap>:936(_find_and_load_unlocked)
+     14/2    0.000    0.000    0.008    0.004 <frozen importlib._bootstrap>:966(_find_and_load)
        26    0.000    0.000    0.000    0.000 <frozen importlib._bootstrap>:997(_handle_fromlist)
         1    0.000    0.000    0.000    0.000 <frozen importlib._bootstrap_external>:1067(_path_hooks)
        37    0.000    0.000    0.000    0.000 <frozen importlib._bootstrap_external>:1080(_path_importer_cache)
@@ -62,7 +62,7 @@ Fri Apr 10 13:05:01 2020    output_profiling
       144    0.000    0.000    0.000    0.000 <frozen importlib._bootstrap_external>:59(<listcomp>)
        16    0.000    0.000    0.000    0.000 <frozen importlib._bootstrap_external>:63(_path_split)
         8    0.000    0.000    0.000    0.000 <frozen importlib._bootstrap_external>:669(create_module)
-      8/2    0.000    0.000    0.007    0.003 <frozen importlib._bootstrap_external>:672(exec_module)
+      8/2    0.000    0.000    0.007    0.004 <frozen importlib._bootstrap_external>:672(exec_module)
         8    0.000    0.000    0.001    0.000 <frozen importlib._bootstrap_external>:743(get_code)
        46    0.000    0.000    0.000    0.000 <frozen importlib._bootstrap_external>:75(_path_stat)
         8    0.000    0.000    0.000    0.000 <frozen importlib._bootstrap_external>:800(__init__)
@@ -71,7 +71,7 @@ Fri Apr 10 13:05:01 2020    output_profiling
         8    0.000    0.000    0.000    0.000 <frozen importlib._bootstrap_external>:840(path_stats)
        10    0.000    0.000    0.000    0.000 <frozen importlib._bootstrap_external>:85(_path_is_mode_type)
         1    0.000    0.000    0.000    0.000 <frozen importlib._bootstrap_external>:908(__init__)
-        1    0.000    0.000    0.001    0.001 <frozen importlib._bootstrap_external>:919(create_module)
+        1    0.000    0.000    0.002    0.002 <frozen importlib._bootstrap_external>:919(create_module)
         1    0.000    0.000    0.000    0.000 <frozen importlib._bootstrap_external>:927(exec_module)
         9    0.000    0.000    0.000    0.000 <frozen importlib._bootstrap_external>:94(_path_isfile)
         1    0.000    0.000    0.000    0.000 <frozen importlib._bootstrap_external>:99(_path_isdir)
@@ -93,29 +93,27 @@ Fri Apr 10 13:05:01 2020    output_profiling
         6    0.000    0.000    0.000    0.000 enum.py:797(__or__)
        57    0.000    0.000    0.000    0.000 enum.py:803(__and__)
         1    0.000    0.000    0.000    0.000 fracaSAT.py:10(__init__)
-        1    0.000    0.000    0.001    0.001 fracaSAT.py:105(get_formula)
-        1    0.000    0.000    0.000    0.000 fracaSAT.py:113(<listcomp>)
-        1    0.000    0.000    0.000    0.000 fracaSAT.py:117(<listcomp>)
-        1    0.000    0.000  180.006  180.006 fracaSAT.py:130(main)
-     1597    0.003    0.000    0.137    0.000 fracaSAT.py:18(get_rnd_interpretation)
-     1597    0.023    0.000    0.133    0.000 fracaSAT.py:19(<listcomp>)
-        1    0.000    0.000  180.014  180.014 fracaSAT.py:2(<module>)
-   798269  110.003    0.000  134.802    0.000 fracaSAT.py:25(calculate_clauses_cost)
-   798269    3.971    0.000    3.971    0.000 fracaSAT.py:26(<listcomp>)
-   798269    0.586    0.000    2.040    0.000 fracaSAT.py:35(satisfies)
-  6009607    0.523    0.000    0.523    0.000 fracaSAT.py:36(<lambda>)
-   798269   22.776    0.000   36.333    0.000 fracaSAT.py:39(find_unsat_clause)
-159653800   11.807    0.000   11.807    0.000 fracaSAT.py:40(<lambda>)
-   798269    1.976    0.000    2.195    0.000 fracaSAT.py:43(find_all_unsat_clauses)
+        1    0.000    0.000    0.001    0.001 fracaSAT.py:104(get_formula)
+        1    0.000    0.000    0.000    0.000 fracaSAT.py:112(<listcomp>)
+        1    0.000    0.000    0.000    0.000 fracaSAT.py:116(<listcomp>)
+        1    0.000    0.000  180.058  180.058 fracaSAT.py:129(main)
+     1146    0.002    0.000    0.099    0.000 fracaSAT.py:18(get_rnd_interpretation)
+     1146    0.017    0.000    0.097    0.000 fracaSAT.py:19(<listcomp>)
+        1    0.000    0.000  180.066  180.066 fracaSAT.py:2(<module>)
+   573000   83.165    0.000  102.089    0.000 fracaSAT.py:25(calculate_clauses_cost)
+   573000    2.888    0.000    2.888    0.000 fracaSAT.py:26(<listcomp>)
+   573000    0.438    0.000    1.753    0.000 fracaSAT.py:35(satisfies)
+  5520027    0.481    0.000    0.481    0.000 fracaSAT.py:36(<lambda>)
+   573000   50.932    0.000   73.265    0.000 fracaSAT.py:59(find_best_flipped_vars)
+179123460   17.327    0.000   17.327    0.000 fracaSAT.py:62(<lambda>)
+        1    1.480    1.480  180.057  180.057 fracaSAT.py:68(gsat)
         1    0.000    0.000    0.000    0.000 fracaSAT.py:8(FracaSAT)
-        1    2.655    2.655  180.005  180.005 fracaSAT.py:84(walk_sat)
-  2394807    0.254    0.000    0.254    0.000 fracaSAT.py:94(<lambda>)
        14    0.000    0.000    0.000    0.000 hashlib.py:116(__get_openssl_constructor)
         1    0.000    0.000    0.002    0.002 hashlib.py:54(<module>)
         8    0.000    0.000    0.000    0.000 hashlib.py:73(__get_builtin_constructor)
         1    0.000    0.000    0.003    0.003 linecache.py:6(<module>)
-  1117714    0.927    0.000    1.365    0.000 random.py:223(_randbelow)
-  1117714    0.754    0.000    2.255    0.000 random.py:255(choice)
+   630300    0.611    0.000    0.882    0.000 random.py:223(_randbelow)
+   630300    0.465    0.000    1.383    0.000 random.py:255(choice)
         1    0.000    0.000    0.003    0.003 random.py:38(<module>)
         1    0.000    0.000    0.000    0.000 random.py:668(SystemRandom)
         1    0.000    0.000    0.000    0.000 random.py:71(Random)
@@ -178,7 +176,7 @@ Fri Apr 10 13:05:01 2020    output_profiling
         1    0.000    0.000    0.000    0.000 threading.py:449(BoundedSemaphore)
         1    0.000    0.000    0.000    0.000 threading.py:487(Event)
         4    0.000    0.000    0.000    0.000 threading.py:498(__init__)
-   799868    0.150    0.000    0.150    0.000 threading.py:506(is_set)
+     2293    0.001    0.000    0.001    0.000 threading.py:506(is_set)
         2    0.000    0.000    0.000    0.000 threading.py:512(set)
         1    0.000    0.000    0.000    0.000 threading.py:533(wait)
         1    0.000    0.000    0.000    0.000 threading.py:566(Barrier)
@@ -216,7 +214,7 @@ Fri Apr 10 13:05:01 2020    output_profiling
         8    0.000    0.000    0.000    0.000 {built-in method _imp._fix_co_filename}
        60    0.000    0.000    0.000    0.000 {built-in method _imp.acquire_lock}
         5    0.000    0.000    0.000    0.000 {built-in method _imp.create_builtin}
-        1    0.001    0.001    0.001    0.001 {built-in method _imp.create_dynamic}
+        1    0.002    0.002    0.002    0.002 {built-in method _imp.create_dynamic}
         5    0.000    0.000    0.000    0.000 {built-in method _imp.exec_builtin}
         1    0.000    0.000    0.000    0.000 {built-in method _imp.exec_dynamic}
        14    0.000    0.000    0.000    0.000 {built-in method _imp.is_builtin}
@@ -229,17 +227,17 @@ Fri Apr 10 13:05:01 2020    output_profiling
        30    0.000    0.000    0.000    0.000 {built-in method _thread.get_ident}
         1    0.000    0.000    0.000    0.000 {built-in method _thread.start_new_thread}
        22    0.000    0.000    0.000    0.000 {built-in method builtins.__build_class__}
-429673421   20.909    0.000   20.909    0.000 {built-in method builtins.abs}
-   798269    0.931    0.000    1.454    0.000 {built-in method builtins.all}
+313493710   16.102    0.000   16.102    0.000 {built-in method builtins.abs}
+   573000    0.835    0.000    1.315    0.000 {built-in method builtins.all}
        14    0.000    0.000    0.000    0.000 {built-in method builtins.any}
-     10/1    0.001    0.000  180.014  180.014 {built-in method builtins.exec}
+     10/1    0.001    0.000  180.066  180.066 {built-in method builtins.exec}
        86    0.000    0.000    0.000    0.000 {built-in method builtins.getattr}
        15    0.000    0.000    0.000    0.000 {built-in method builtins.globals}
        93    0.000    0.000    0.000    0.000 {built-in method builtins.hasattr}
       230    0.000    0.000    0.000    0.000 {built-in method builtins.isinstance}
-1117873/1117867    0.135    0.000    0.135    0.000 {built-in method builtins.len}
+57930459/57930453    3.197    0.000    3.197    0.000 {built-in method builtins.len}
         2    0.000    0.000    0.000    0.000 {built-in method builtins.max}
-   798294    0.893    0.000    1.147    0.000 {built-in method builtins.min}
+       25    0.000    0.000    0.000    0.000 {built-in method builtins.min}
        15    0.000    0.000    0.000    0.000 {built-in method builtins.ord}
         1    0.000    0.000    0.000    0.000 {built-in method builtins.print}
         1    0.000    0.000    0.000    0.000 {built-in method builtins.repr}
@@ -254,15 +252,15 @@ Fri Apr 10 13:05:01 2020    output_profiling
         1    0.000    0.000    0.000    0.000 {built-in method posix.listdir}
        46    0.000    0.000    0.000    0.000 {built-in method posix.stat}
         1    0.000    0.000    0.000    0.000 {built-in method sys._getframe}
-        1    0.000    0.000    0.000    0.000 {function Random.seed at 0x7f56d512bd90}
+        1    0.000    0.000    0.000    0.000 {function Random.seed at 0x7f0b17daad90}
         6    0.000    0.000    0.000    0.000 {method '__contains__' of 'frozenset' objects}
         3    0.000    0.000    0.000    0.000 {method '__enter__' of '_thread.lock' objects}
         3    0.000    0.000    0.000    0.000 {method '__exit__' of '_thread.lock' objects}
         7    0.000    0.000    0.000    0.000 {method 'acquire' of '_thread.lock' objects}
       179    0.000    0.000    0.000    0.000 {method 'add' of 'set' objects}
         1    0.000    0.000    0.000    0.000 {method 'append' of 'collections.deque' objects}
-  2395571    0.220    0.000    0.220    0.000 {method 'append' of 'list' objects}
-  1117714    0.137    0.000    0.137    0.000 {method 'bit_length' of 'int' objects}
+ 25685957    1.845    0.000    1.845    0.000 {method 'append' of 'list' objects}
+   630300    0.071    0.000    0.071    0.000 {method 'bit_length' of 'int' objects}
         1    0.000    0.000    0.000    0.000 {method 'disable' of '_lsprof.Profiler' objects}
         1    0.000    0.000    0.000    0.000 {method 'discard' of 'set' objects}
        10    0.000    0.000    0.000    0.000 {method 'endswith' of 'str' objects}
@@ -270,11 +268,10 @@ Fri Apr 10 13:05:01 2020    output_profiling
        28    0.000    0.000    0.000    0.000 {method 'find' of 'bytearray' objects}
        11    0.000    0.000    0.000    0.000 {method 'format' of 'str' objects}
        48    0.000    0.000    0.000    0.000 {method 'get' of 'dict' objects}
-  1713590    0.301    0.000    0.301    0.000 {method 'getrandbits' of '_random.Random' objects}
+   933405    0.200    0.000    0.200    0.000 {method 'getrandbits' of '_random.Random' objects}
         6    0.000    0.000    0.000    0.000 {method 'isidentifier' of 'str' objects}
         3    0.000    0.000    0.000    0.000 {method 'items' of 'dict' objects}
       254    0.000    0.000    0.000    0.000 {method 'join' of 'str' objects}
-   479943    0.070    0.000    0.070    0.000 {method 'random' of '_random.Random' objects}
         8    0.000    0.000    0.000    0.000 {method 'read' of '_io.FileIO' objects}
         1    0.000    0.000    0.000    0.000 {method 'readlines' of '_io._IOBase' objects}
         1    0.000    0.000    0.000    0.000 {method 'release' of '_thread.lock' objects}
