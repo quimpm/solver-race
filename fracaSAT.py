@@ -5,6 +5,7 @@ from threading import Event, Timer
 
 stop_event = Event()
 
+
 class FracaSAT(object):
 
     def __init__(self, formula, num_vars, not_found, num_clauses, clauses):
@@ -47,10 +48,10 @@ def find_all_unsat_clauses(inter, vars, fracasat, current_clauses_cost):
         var_clauses = fracasat.formula[-var]
         for clause in var_clauses:
             if current_clauses_cost[clause] == 1:
-                i+=1
-        unsat_clauses.append([var,i])
+                i += 1
+        unsat_clauses.append([var, i])
     return unsat_clauses
-        
+
 
 def find_actual_cost(cost_clauses):
     return len(list(filter(lambda x: x == 0, cost_clauses)))
@@ -59,45 +60,59 @@ def find_actual_cost(cost_clauses):
 def find_best_flipped_vars(inter, cost_clauses, fracasat):
     best_vars = []
     for var in inter:
-        cost = len(list(filter(lambda x: cost_clauses[x - 1] == 1, fracasat.formula[var]))) - len(fracasat.formula[-var])
+        cost = len(list(filter(lambda x: cost_clauses[x - 1] == 1, fracasat.formula[var]))) - len(
+            fracasat.formula[-var])
         if cost < 0:
             best_vars.append(var)
     return best_vars
 
 
-def gsat(max_flips, fracasat):
+def solver_structure(max_flips, fracasat, algorithm, prob):
     while not stop_event.is_set():
         inter = get_rnd_interpretation(fracasat)
         for j in range(max_flips):
             cost_clauses = calculate_clauses_cost(fracasat, inter)
             if satisfies(cost_clauses):
                 return inter
-            vars = find_best_flipped_vars(inter, cost_clauses, fracasat)
-            substitute = random.choice(vars)
-            inter[abs(substitute) - 1] = -substitute
+            algorithm(inter, cost_clauses, fracasat, prob)
         if stop_event.is_set():
             break
     return None
 
 
-def walk_sat(max_flips, fracasat, prob):
+def gsat(inter, cost_clauses, fracasat, prob):
+    vars = find_best_flipped_vars(inter, cost_clauses, fracasat)
+    substitute = random.choice(vars)
+    inter[abs(substitute) - 1] = -substitute
+
+
+def walk_sat(inter, cost_clauses, fracasat, prob):
+    clause_unsat = find_unsat_clause(cost_clauses)
+    vars = fracasat.clauses[clause_unsat]
+    unsat_var_clauses = find_all_unsat_clauses(inter, vars, fracasat, cost_clauses)
+    broken_var, num_broken_clauses = min(unsat_var_clauses, key=lambda x: x[1])
+    if num_broken_clauses > 0 and random.random() < prob:
+        substitute = random.choice(vars)
+    else:
+        substitute = broken_var
+    inter[abs(substitute) - 1] = substitute
+
+
+def random_walk_gsat(max_flips, fracasat, prob):
     while not stop_event.is_set():
         inter = get_rnd_interpretation(fracasat)
         for j in range(max_flips):
+            current_prob = random.random()
             cost_clauses = calculate_clauses_cost(fracasat, inter)
             if satisfies(cost_clauses):
                 return inter
-            clause_unsat = find_unsat_clause(cost_clauses)
-            vars = fracasat.clauses[clause_unsat]
-            unsat_var_clauses = find_all_unsat_clauses(inter, vars, fracasat, cost_clauses)
-            broken_var, num_broken_clauses = min(unsat_var_clauses, key=lambda x: x[1])
-            if num_broken_clauses > 0 and random.random() < prob:
-                substitute = random.choice(vars)
+            if current_prob <= prob:
+                unsat_lit = random.choice(fracasat.clauses[find_unsat_clause(cost_clauses)])
+                inter[abs(unsat_lit) - 1] = -inter[abs(unsat_lit) - 1]
             else:
-                substitute = broken_var
-            inter[abs(substitute)-1] = substitute
-            if stop_event.is_set():
-                break
+                gsat(inter, cost_clauses, fracasat, prob)
+        if stop_event.is_set():
+            break
     return None
 
 
@@ -123,8 +138,10 @@ def get_formula(file_name) -> FracaSAT:
                 not_found.append(-i - 1)
         return FracaSAT(formula, num_vars, not_found, num_clauses, clauses)
 
+
 def send_signal():
     stop_event.set()
+
 
 def main():
     if len(sys.argv) != 2:
@@ -133,8 +150,9 @@ def main():
         fracaSAT = get_formula(sys.argv[1])
     t = Timer(180, send_signal)
     t.start()
-    inter = gsat(500,fracaSAT)
-    #inter = walk_sat(500, fracaSAT, 0.5)
+    #inter = solver_structure(500, fracaSAT, gsat, 0)
+    #inter = solver_structure(500, fracaSAT, walk_sat, 0.5)
+    inter = random_walk_gsat(500, fracaSAT, 0.5)
     t.cancel()
     if inter != None:
         print('SATISFIABLE FOR: ', inter)
