@@ -20,7 +20,7 @@ def get_rnd_interpretation(fracaSAT):
     return inter
 
 
-def caluculate_clauses_cost(fracaSAT, inter):
+def calculate_clauses_cost(fracaSAT, inter):
     cost_clauses = [0 for _ in range(fracaSAT.num_clauses)]
     for i, c in enumerate(fracaSAT.clauses):
         for lit in c:
@@ -41,7 +41,7 @@ def find_all_unsat_clauses(inter, vars, fracasat):
     inter_change_cost = []
     for var in vars:
         current_inter[abs(var) - 1] = -current_inter[abs(var) - 1]
-        inter_change_cost.append([var, caluculate_clauses_cost(fracasat, current_inter)])
+        inter_change_cost.append([var, calculate_clauses_cost(fracasat, current_inter)])
         current_inter = inter.copy()
     return [[var, list(filter(lambda x: x[1] == 0, enumerate(cost_clause)))] for var, cost_clause in inter_change_cost]
 
@@ -63,7 +63,7 @@ def gsat(max_tries, max_flips, fracasat):
     for i in range(max_tries):
         inter = get_rnd_interpretation(fracasat)
         for j in range(max_flips):
-            cost_clauses = caluculate_clauses_cost(fracasat, inter)
+            cost_clauses = calculate_clauses_cost(fracasat, inter)
             if satisfies(cost_clauses):
                 return inter
             vars = find_best_flipped_vars(inter, cost_clauses, fracasat)
@@ -77,7 +77,7 @@ def walk_sat(max_tries, max_flips, fracasat, prob):
     for i in range(max_tries):
         inter = get_rnd_interpretation(fracasat)
         for j in range(max_flips):
-            cost_clauses = caluculate_clauses_cost(fracasat, inter)
+            cost_clauses = calculate_clauses_cost(fracasat, inter)
             if satisfies(cost_clauses):
                 return inter
             clause_unsat = find_unsat_clause(cost_clauses)
