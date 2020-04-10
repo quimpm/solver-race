@@ -53,16 +53,17 @@ def find_actual_cost(cost_clauses):
 def find_best_flipped_vars(inter, cost_clauses, fracasat):
     best_vars = []
     for var in inter:
-        cost = len(list(filter(lambda x: cost_clauses[x-1] == 1, fracasat.formula[var]))) - len(fracasat.formula[-var])
+        cost = len(list(filter(lambda x: cost_clauses[x - 1] == 1, fracasat.formula[var]))) - len(fracasat.formula[-var])
         if cost < 0:
             best_vars.append(var)
     return best_vars
 
+
 def gsat(max_tries, max_flips, fracasat):
     for i in range(max_tries):
         inter = get_rnd_interpretation(fracasat)
-        cost_clauses = caluculate_clauses_cost(fracasat, inter)
         for j in range(max_flips):
+            cost_clauses = caluculate_clauses_cost(fracasat, inter)
             if satisfies(cost_clauses):
                 return inter
             vars = find_best_flipped_vars(inter, cost_clauses, fracasat)
@@ -71,11 +72,12 @@ def gsat(max_tries, max_flips, fracasat):
         print(f'NEW MAX_TRY {i}')
     return None
 
+
 def walk_sat(max_tries, max_flips, fracasat, prob):
     for i in range(max_tries):
         inter = get_rnd_interpretation(fracasat)
-        cost_clauses = caluculate_clauses_cost(fracasat, inter)
         for j in range(max_flips):
+            cost_clauses = caluculate_clauses_cost(fracasat, inter)
             if satisfies(cost_clauses):
                 return inter
             clause_unsat = find_unsat_clause(cost_clauses)
@@ -126,8 +128,8 @@ def main():
         print('NOT_FOUND:', fracaSAT.not_found)
         print('NUM_CLAUSES:', fracaSAT.num_clauses)
         print('CLAUSES:', fracaSAT.clauses)
-    #inter = walk_sat(100, 420, fracaSAT, 0.5)
-    inter = gsat(1000, 4000,fracaSAT)
+    inter = walk_sat(100, 420, fracaSAT, 0.5)
+    # inter = gsat(1000, 4000,fracaSAT)
     if inter != None:
         print('SATISFIABLE FOR: ', inter)
     else:
