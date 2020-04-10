@@ -152,12 +152,8 @@ def main():
     t = Timer(180, send_signal)
     t.start()
     #inter = solver_structure(500, fracaSAT, gsat, 0)
-<<<<<<< HEAD
     #inter = solver_structure(500, fracaSAT, walk_sat, 0.5)
     inter = random_walk_gsat(500, fracaSAT, 0.5)
-=======
-    inter = solver_structure(500, fracaSAT, walk_sat, 0.5)
->>>>>>> feature/walksat-repair
     t.cancel()
     if inter != None:
         print('SATISFIABLE FOR: ', inter)
