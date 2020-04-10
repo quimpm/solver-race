@@ -27,8 +27,8 @@ def calculate_clauses_cost(fracaSAT, inter):
     cost_clauses = [0 for _ in range(fracaSAT.num_clauses)]
     for i, c in enumerate(fracaSAT.clauses):
         for lit in c:
-            cost_clauses[i - 1] += 1 if lit == inter[abs(lit) - 1] else 0
-            if cost_clauses[i - 1] >= 2:
+            cost_clauses[i] += 1 if lit == inter[abs(lit) - 1] else 0
+            if cost_clauses[i] >= 2:
                 break
     return cost_clauses
 
@@ -70,13 +70,14 @@ def find_best_flipped_vars(inter, cost_clauses, fracasat):
 def solver_structure(max_flips, fracasat, algorithm, prob):
     while not stop_event.is_set():
         inter = get_rnd_interpretation(fracasat)
+        inter = [-1, -2, 3]
         for j in range(max_flips):
             cost_clauses = calculate_clauses_cost(fracasat, inter)
             if satisfies(cost_clauses):
                 return inter
             algorithm(inter, cost_clauses, fracasat, prob)
-        if stop_event.is_set():
-            break
+            if stop_event.is_set():
+                break
     return None
 
 
@@ -92,7 +93,7 @@ def walk_sat(inter, cost_clauses, fracasat, prob):
     unsat_var_clauses = find_all_unsat_clauses(inter, vars, fracasat, cost_clauses)
     broken_var, num_broken_clauses = min(unsat_var_clauses, key=lambda x: x[1])
     if num_broken_clauses > 0 and random.random() < prob:
-        substitute = random.choice(vars)
+        substitute = -random.choice(vars)
     else:
         substitute = broken_var
     inter[abs(substitute) - 1] = substitute
@@ -151,8 +152,12 @@ def main():
     t = Timer(180, send_signal)
     t.start()
     #inter = solver_structure(500, fracaSAT, gsat, 0)
+<<<<<<< HEAD
     #inter = solver_structure(500, fracaSAT, walk_sat, 0.5)
     inter = random_walk_gsat(500, fracaSAT, 0.5)
+=======
+    inter = solver_structure(500, fracaSAT, walk_sat, 0.5)
+>>>>>>> feature/walksat-repair
     t.cancel()
     if inter != None:
         print('SATISFIABLE FOR: ', inter)
