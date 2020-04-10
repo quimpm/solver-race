@@ -61,8 +61,8 @@ def find_best_flipped_vars(inter, cost_clauses, fracasat):
     return best_vars
 
 
-def gsat(max_tries, max_flips, fracasat):
-    for i in range(max_tries):
+def gsat(max_flips, fracasat):
+    while not stop_event.is_set():
         inter = get_rnd_interpretation(fracasat)
         for j in range(max_flips):
             cost_clauses = calculate_clauses_cost(fracasat, inter)
@@ -71,6 +71,8 @@ def gsat(max_tries, max_flips, fracasat):
             vars = find_best_flipped_vars(inter, cost_clauses, fracasat)
             substitute = random.choice(vars)
             inter[abs(substitute) - 1] = -substitute
+        if stop_event.is_set():
+            break
         print(f'NEW MAX_TRY {i}')
     return None
 
@@ -128,7 +130,7 @@ def main():
         fracaSAT = get_formula(sys.argv[1])
     t = Timer(180, send_signal)
     t.start()
-    # inter = gsat(1000, 4000,fracaSAT)
+    # inter = gsat(4000,fracaSAT)
     inter = walk_sat(500, fracaSAT, 0.5)
     t.cancel()
     if inter != None:
