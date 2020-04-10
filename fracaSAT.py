@@ -100,6 +100,9 @@ def walk_sat(max_flips, fracasat, prob):
                 break
     return None
 
+def random_walk_gsat(max_flips, fracasat, prob):
+    pass
+
 
 def get_formula(file_name) -> FracaSAT:
     with open(file_name) as file:
