@@ -27,6 +27,8 @@ def calculate_clauses_cost(fracaSAT, inter):
     for i, c in enumerate(fracaSAT.clauses):
         for lit in c:
             cost_clauses[i - 1] += 1 if lit == inter[abs(lit) - 1] else 0
+            if cost_clauses[i - 1] >= 2:
+                break
     return cost_clauses
 
 
@@ -38,15 +40,17 @@ def find_unsat_clause(cost_clauses):
     return random.choice(list(filter(lambda x: x[1] == 0, enumerate(cost_clauses))))[0]
 
 
-def find_all_unsat_clauses(inter, vars, fracasat):
-    current_inter = inter.copy()
-    inter_change_cost = []
+def find_all_unsat_clauses(inter, vars, fracasat, current_clauses_cost):
+    unsat_clauses = []
     for var in vars:
-        current_inter[abs(var) - 1] = -current_inter[abs(var) - 1]
-        inter_change_cost.append([var, calculate_clauses_cost(fracasat, current_inter)])
-        current_inter = inter.copy()
-    return [[var, list(filter(lambda x: x[1] == 0, enumerate(cost_clause)))] for var, cost_clause in inter_change_cost]
-
+        i = 0
+        var_clauses = fracasat.formula[-var]
+        for clause in var_clauses:
+            if current_clauses_cost[clause] == 1:
+                i+=1
+        unsat_clauses.append([var,i])
+    return unsat_clauses
+        
 
 def find_actual_cost(cost_clauses):
     return len(list(filter(lambda x: x == 0, cost_clauses)))
@@ -73,7 +77,6 @@ def gsat(max_flips, fracasat):
             inter[abs(substitute) - 1] = -substitute
         if stop_event.is_set():
             break
-        print(f'NEW MAX_TRY {i}')
     return None
 
 
@@ -86,9 +89,9 @@ def walk_sat(max_flips, fracasat, prob):
                 return inter
             clause_unsat = find_unsat_clause(cost_clauses)
             vars = fracasat.clauses[clause_unsat]
-            unsat_var_clauses = find_all_unsat_clauses(inter, vars, fracasat)
-            broken_var, broken_clauses = min(unsat_var_clauses, key=lambda x: len(x[1]))
-            if len(broken_clauses) > 0 and random.random() < prob:
+            unsat_var_clauses = find_all_unsat_clauses(inter, vars, fracasat, cost_clauses)
+            broken_var, num_broken_clauses = min(unsat_var_clauses, key=lambda x: x[1])
+            if num_broken_clauses > 0 and random.random() < prob:
                 substitute = random.choice(vars)
             else:
                 substitute = broken_var
@@ -130,8 +133,8 @@ def main():
         fracaSAT = get_formula(sys.argv[1])
     t = Timer(180, send_signal)
     t.start()
-    # inter = gsat(4000,fracaSAT)
-    inter = walk_sat(500, fracaSAT, 0.5)
+    inter = gsat(500,fracaSAT)
+    #inter = walk_sat(500, fracaSAT, 0.5)
     t.cancel()
     if inter != None:
         print('SATISFIABLE FOR: ', inter)
