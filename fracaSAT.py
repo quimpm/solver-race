@@ -83,11 +83,11 @@ def walk_sat(max_tries, max_flips, fracasat, prob):
             clause_unsat = find_unsat_clause(cost_clauses)
             vars = fracasat.clauses[clause_unsat]
             unsat_var_clauses = find_all_unsat_clauses(inter, vars, fracasat)
-            broken = min(unsat_var_clauses, key=lambda x: len(x[1]))
-            if len(broken[1]) > 0 and random.random() < prob:
+            broken_var, broken_clauses = min(unsat_var_clauses, key=lambda x: len(x[1]))
+            if len(broken_clauses) > 0 and random.random() < prob:
                 substitute = random.choice(vars)
             else:
-                substitute = broken[0]
+                substitute = broken_var
             inter[abs(substitute) - 1] = substitute
         print(f'NEW MAX_TRY {i}')
     return None
