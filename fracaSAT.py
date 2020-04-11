@@ -60,10 +60,14 @@ def find_actual_cost(cost_clauses):
 def find_best_flipped_vars(inter, cost_clauses, fracasat):
     best_vars = []
     for var in inter:
-        cost = len(fracasat.formula[-var]) - len(list(filter(lambda x: cost_clauses[x - 1] == 1, fracasat.formula[var])))
+        cost = calculate_flipped_cost(var, fracasat.formula, cost_clauses)
         if cost > 0:
             best_vars.append(var)
     return best_vars
+
+
+def calculate_flipped_cost(var, formula, cost_clauses):
+    return len(formula[-var]) - len(list(filter(lambda x: cost_clauses[x - 1] == 1, formula[var])))
 
 
 def solver_structure(max_flips, fracasat, algorithm, prob):
