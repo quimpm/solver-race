@@ -41,7 +41,7 @@ def find_unsat_clause(cost_clauses):
     return random.choice(list(filter(lambda x: x[1] == 0, enumerate(cost_clauses))))[0]
 
 
-def find_all_unsat_clauses(inter, vars, fracasat, current_clauses_cost):
+def find_all_unsat_clauses(vars, fracasat, current_clauses_cost):
     unsat_clauses = []
     for var in vars:
         i = 0
@@ -60,9 +60,8 @@ def find_actual_cost(cost_clauses):
 def find_best_flipped_vars(inter, cost_clauses, fracasat):
     best_vars = []
     for var in inter:
-        cost = len(list(filter(lambda x: cost_clauses[x - 1] == 1, fracasat.formula[var]))) - len(
-            fracasat.formula[-var])
-        if cost < 0:
+        cost = len(fracasat.formula[-var]) - len(list(filter(lambda x: cost_clauses[x - 1] == 1, fracasat.formula[var])))
+        if cost > 0:
             best_vars.append(var)
     return best_vars
 
@@ -89,7 +88,7 @@ def gsat(inter, cost_clauses, fracasat, prob):
 def walk_sat(inter, cost_clauses, fracasat, prob):
     clause_unsat = find_unsat_clause(cost_clauses)
     vars = fracasat.clauses[clause_unsat]
-    unsat_var_clauses = find_all_unsat_clauses(inter, vars, fracasat, cost_clauses)
+    unsat_var_clauses = find_all_unsat_clauses(vars, fracasat, cost_clauses)
     broken_var, num_broken_clauses = min(unsat_var_clauses, key=lambda x: x[1])
     if num_broken_clauses > 0 and random.random() < prob:
         substitute = -random.choice(vars)
@@ -139,7 +138,7 @@ def main():
         sys.exit()
     else:
         fracaSAT = get_formula(sys.argv[1])
-    t = Timer(180, send_signal)
+    t = Timer(600, send_signal)
     t.start()
     # inter = solver_structure(500, fracaSAT, gsat, 0)
     # inter = solver_structure(500, fracaSAT, walk_sat, 0.5)
