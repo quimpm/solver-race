@@ -70,7 +70,6 @@ def find_best_flipped_vars(inter, cost_clauses, fracasat):
 def solver_structure(max_flips, fracasat, algorithm, prob):
     while not stop_event.is_set():
         inter = get_rnd_interpretation(fracasat)
-        inter = [-1, -2, 3]
         for j in range(max_flips):
             cost_clauses = calculate_clauses_cost(fracasat, inter)
             if satisfies(cost_clauses):
@@ -99,22 +98,13 @@ def walk_sat(inter, cost_clauses, fracasat, prob):
     inter[abs(substitute) - 1] = substitute
 
 
-def random_walk_gsat(max_flips, fracasat, prob):
-    while not stop_event.is_set():
-        inter = get_rnd_interpretation(fracasat)
-        for j in range(max_flips):
-            current_prob = random.random()
-            cost_clauses = calculate_clauses_cost(fracasat, inter)
-            if satisfies(cost_clauses):
-                return inter
-            if current_prob <= prob:
-                unsat_lit = random.choice(fracasat.clauses[find_unsat_clause(cost_clauses)])
-                inter[abs(unsat_lit) - 1] = -inter[abs(unsat_lit) - 1]
-            else:
-                gsat(inter, cost_clauses, fracasat, prob)
-        if stop_event.is_set():
-            break
-    return None
+def random_walk_gsat(inter, cost_clauses, fracasat, prob):
+    current_prob = random.random()
+    if current_prob <= prob:
+        unsat_lit = random.choice(fracasat.clauses[find_unsat_clause(cost_clauses)])
+        inter[abs(unsat_lit) - 1] = -inter[abs(unsat_lit) - 1]
+    else:
+        gsat(inter, cost_clauses, fracasat, prob)
 
 
 def get_formula(file_name) -> FracaSAT:
@@ -151,9 +141,9 @@ def main():
         fracaSAT = get_formula(sys.argv[1])
     t = Timer(180, send_signal)
     t.start()
-    #inter = solver_structure(500, fracaSAT, gsat, 0)
-    #inter = solver_structure(500, fracaSAT, walk_sat, 0.5)
-    inter = random_walk_gsat(500, fracaSAT, 0.5)
+    # inter = solver_structure(500, fracaSAT, gsat, 0)
+    # inter = solver_structure(500, fracaSAT, walk_sat, 0.5)
+    inter = solver_structure(500, fracaSAT, random_walk_gsat, 0.5)
     t.cancel()
     if inter != None:
         print('SATISFIABLE FOR: ', inter)
