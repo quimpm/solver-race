@@ -87,6 +87,12 @@ def solver_structure(max_flips, fracasat, algorithm, prob):
             num_flips += 1
         num_restart += 1
 
+def add_new_clause(fracasat, inter):
+    fracasat.num_clauses += 1
+    new_clause = list(map(lambda x: -x, inter))
+    fracasat.clauses.append(new_clause)
+    for lit in new_clause:
+        fracasat.formula[lit].append(fracasat.num_clauses)
 
 def gsat(inter, cost_clauses, fracasat, prob):
     global num_gsat_local, generated_inter
@@ -95,6 +101,7 @@ def gsat(inter, cost_clauses, fracasat, prob):
         num_gsat_local += 1
         if inter not in generated_inter:
             generated_inter.append(inter)
+        add_new_clause(fracasat, inter)
         substitute = random.choice(fracasat.clauses[find_unsat_clause(cost_clauses)])
     else:
         substitute = random.choice(vars)
