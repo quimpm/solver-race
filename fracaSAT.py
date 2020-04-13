@@ -122,8 +122,8 @@ def gsat(inter, cost_clauses, fracasat, prob):
         num_gsat_local += 1
         if inter not in generated_inter:
             generated_inter.append(inter)
-        if random.random() > prob and fracasat.num_first_clauses * 1.2 > fracasat.num_clauses:
-            add_all_unsat_clause(fracasat, cost_clauses)
+        #if random.random() > prob and fracasat.num_first_clauses * 1.2 > fracasat.num_clauses:
+        #    add_all_unsat_clause(fracasat, cost_clauses)
         substitute = random.choice(fracasat.clauses[find_unsat_clause(cost_clauses)])
     else:
         substitute = random.choice(vars)
