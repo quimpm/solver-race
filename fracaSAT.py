@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 import sys
 import random
+from functools import reduce
 
 num_restart, num_flips, num_gsat_choice, num_walk_choice, num_gsat_local, generated_inter = 0, 0, 0, 0, 0, []
 
@@ -85,14 +86,34 @@ def solver_structure(max_flips, fracasat, algorithm, prob):
                 return inter
             algorithm(inter, cost_clauses, fracasat, prob)
             num_flips += 1
+        print(f'\tNUM TOTAL CLAUSES {fracasat.num_clauses}')
         num_restart += 1
 
-def add_new_clause(fracasat, inter):
+
+def add_all_unsat_clause(fracasat, cost_clause):
+    unsat_lits = reduce(lambda x, y: set(x).union(y),
+                        map(lambda c: fracasat.clauses[c], filter(lambda x: x == 0, cost_clause)))
+    fracasat.clauses.append(list(unsat_lits))
+    for lit in unsat_lits:
+        fracasat.formula[lit].append(fracasat.num_clauses)
+        fracasat.num_clauses += 1
+
+
+def add_twice_unsat_clause(fracasat, cost_clause):
+    unsat_cl = find_unsat_clause(cost_clause)
+    fracasat.clauses.append(fracasat.clauses[unsat_cl])
+    for lit in fracasat.clauses[unsat_cl]:
+        fracasat.formula[lit].append(fracasat.num_clauses)
+    fracasat.num_clauses += 1
+
+
+def add_new_clause_inter(fracasat, inter):
     fracasat.num_clauses += 1
     new_clause = list(map(lambda x: -x, inter))
     fracasat.clauses.append(new_clause)
     for lit in new_clause:
         fracasat.formula[lit].append(fracasat.num_clauses - 1)
+
 
 def gsat(inter, cost_clauses, fracasat, prob):
     global num_gsat_local, generated_inter
@@ -101,7 +122,7 @@ def gsat(inter, cost_clauses, fracasat, prob):
         num_gsat_local += 1
         if inter not in generated_inter:
             generated_inter.append(inter)
-        add_new_clause(fracasat, inter)
+        add_twice_unsat_clause(fracasat, cost_clauses)
         substitute = random.choice(fracasat.clauses[find_unsat_clause(cost_clauses)])
     else:
         substitute = random.choice(vars)
@@ -157,7 +178,7 @@ def get_formula(file_name):
 
 
 def main():
-    global num_restart, num_flips, num_gsat_choice, num_walk_choice, num_gsat_local,generated_inter
+    global num_restart, num_flips, num_gsat_choice, num_walk_choice, num_gsat_local, generated_inter
     if len(sys.argv) != 2:
         sys.exit()
     else:
@@ -175,6 +196,7 @@ def main():
         print(f'\tNUM WALK CHOICE: {num_walk_choice}')
         print(f'\tNUM LOCAL GSAT FLIP: {num_gsat_local}')
         print(f'\tNUM_LOCAL_MIN {len(generated_inter)}')
+        print(f'\tNUM TOTAL CLAUSES {fracaSAT.num_clauses}')
         print('==========')
     else:
         print('UNSATISFIABLE')
