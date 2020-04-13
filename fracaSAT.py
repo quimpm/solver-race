@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
 import sys
 import random
-from functools import lru_cache
 from threading import Event, Timer
 
 stop_event = Event()
@@ -159,7 +158,8 @@ def main():
     inter = solver_structure(500, fracaSAT, random_walk_gsat, 0.5)
     t.cancel()
     if inter != None:
-        print('SATISFIABLE FOR: ', inter)
+        print('s SATISFIABLE')
+        print('v', ' '.join(map(str, inter)), 0)
     else:
         print('UNSATISFIABLE')
 
