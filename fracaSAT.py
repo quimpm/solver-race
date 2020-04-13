@@ -87,7 +87,6 @@ def solver_structure(max_flips, fracasat, algorithm, prob):
                 return inter
             algorithm(inter, cost_clauses, fracasat, prob)
             num_flips += 1
-        print(f'\tNUM TOTAL CLAUSES {fracasat.num_clauses}')
         num_restart += 1
 
 
@@ -124,7 +123,7 @@ def gsat(inter, cost_clauses, fracasat, prob):
         if inter not in generated_inter:
             generated_inter.append(inter)
         if random.random() > prob and fracasat.num_first_clauses * 1.2 > fracasat.num_clauses:
-            add_all_unsat_clause(fracasat, cost_clauses)
+            add_twice_unsat_clause(fracasat, cost_clauses)
         substitute = random.choice(fracasat.clauses[find_unsat_clause(cost_clauses)])
     else:
         substitute = random.choice(vars)
