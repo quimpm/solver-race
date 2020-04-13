@@ -10,6 +10,7 @@ class FracaSAT(object):
 
     def __init__(self, formula, num_vars, not_found, num_clauses, clauses):
         self.clauses = clauses
+        self.num_first_clauses = num_clauses
         self.num_clauses = num_clauses
         self.not_found = not_found
         self.num_vars = num_vars
@@ -95,15 +96,15 @@ def add_all_unsat_clause(fracasat, cost_clause):
                         map(lambda c: fracasat.clauses[c], filter(lambda x: x == 0, cost_clause)))
     fracasat.clauses.append(list(unsat_lits))
     for lit in unsat_lits:
-        fracasat.formula[lit].append(fracasat.num_clauses)
-        fracasat.num_clauses += 1
+        fracasat.formula[lit].append(fracasat.num_clauses - 1)
+    fracasat.num_clauses += 1
 
 
 def add_twice_unsat_clause(fracasat, cost_clause):
     unsat_cl = find_unsat_clause(cost_clause)
     fracasat.clauses.append(fracasat.clauses[unsat_cl])
     for lit in fracasat.clauses[unsat_cl]:
-        fracasat.formula[lit].append(fracasat.num_clauses)
+        fracasat.formula[lit].append(fracasat.num_clauses - 1)
     fracasat.num_clauses += 1
 
 
@@ -122,7 +123,8 @@ def gsat(inter, cost_clauses, fracasat, prob):
         num_gsat_local += 1
         if inter not in generated_inter:
             generated_inter.append(inter)
-        add_twice_unsat_clause(fracasat, cost_clauses)
+        if random.random() > prob and fracasat.num_first_clauses * 1.2 > fracasat.num_clauses:
+            add_all_unsat_clause(fracasat, cost_clauses)
         substitute = random.choice(fracasat.clauses[find_unsat_clause(cost_clauses)])
     else:
         substitute = random.choice(vars)
@@ -150,7 +152,7 @@ def random_walk_gsat(inter, cost_clauses, fracasat, prob):
         inter[abs(unsat_lit) - 1] = -inter[abs(unsat_lit) - 1]
     else:
         num_gsat_choice += 1
-        gsat(inter, cost_clauses, fracasat, prob)
+        gsat(inter, cost_clauses, fracasat, 0.8)
 
 
 def get_formula(file_name):
