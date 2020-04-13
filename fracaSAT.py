@@ -67,7 +67,13 @@ def find_best_flipped_vars(inter, cost_clauses, fracasat):
 
 
 def calculate_flipped_cost(var, formula, cost_clauses):
-    return len(formula[-var]) - len(list(filter(lambda x: cost_clauses[x - 1] == 1, formula[var])))
+    change_var = get_critical_clauses(formula[-var], cost_clauses, 0)
+    actual_var_cost = get_critical_clauses(formula[var], cost_clauses)
+    return len(change_var) - len(actual_var_cost)
+
+
+def get_critical_clauses(clauses, cost_clauses, cost=1):
+    return list(filter(lambda x: cost_clauses[x] == cost, clauses))
 
 
 def solver_structure(max_flips, fracasat, algorithm, prob):
@@ -85,7 +91,10 @@ def solver_structure(max_flips, fracasat, algorithm, prob):
 
 def gsat(inter, cost_clauses, fracasat, prob):
     vars = find_best_flipped_vars(inter, cost_clauses, fracasat)
-    substitute = random.choice(vars)
+    if not vars:
+        substitute = random.choice(fracasat.clauses[find_unsat_clause(cost_clauses)])
+    else:
+        substitute = random.choice(vars)
     inter[abs(substitute) - 1] = -substitute
 
 
@@ -149,7 +158,8 @@ def main():
     inter = solver_structure(500, fracaSAT, random_walk_gsat, 0.5)
     t.cancel()
     if inter != None:
-        print('SATISFIABLE FOR: ', inter)
+        print('s SATISFIABLE')
+        print('v', ' '.join(map(str, inter)), 0)
     else:
         print('UNSATISFIABLE')
 
