@@ -92,7 +92,7 @@ def add_new_clause(fracasat, inter):
     new_clause = list(map(lambda x: -x, inter))
     fracasat.clauses.append(new_clause)
     for lit in new_clause:
-        fracasat.formula[lit].append(fracasat.num_clauses)
+        fracasat.formula[lit].append(fracasat.num_clauses - 1)
 
 def gsat(inter, cost_clauses, fracasat, prob):
     global num_gsat_local, generated_inter
