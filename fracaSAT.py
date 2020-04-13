@@ -2,7 +2,8 @@
 import sys
 import random
 
-num_restart, num_flips, num_gsat_choice, num_walk_choice, num_gsat_local = 0, 0, 0, 0, 0
+num_restart, num_flips, num_gsat_choice, num_walk_choice, num_gsat_local, generated_inter = 0, 0, 0, 0, 0, []
+
 
 class FracaSAT(object):
 
@@ -88,10 +89,12 @@ def solver_structure(max_flips, fracasat, algorithm, prob):
 
 
 def gsat(inter, cost_clauses, fracasat, prob):
-    global num_gsat_local
+    global num_gsat_local, generated_inter
     vars = find_best_flipped_vars(inter, cost_clauses, fracasat)
     if not vars:
         num_gsat_local += 1
+        if inter not in generated_inter:
+            generated_inter.append(inter)
         substitute = random.choice(fracasat.clauses[find_unsat_clause(cost_clauses)])
     else:
         substitute = random.choice(vars)
@@ -147,7 +150,7 @@ def get_formula(file_name):
 
 
 def main():
-    global num_restart, num_flips, num_gsat_choice, num_walk_choice, num_gsat_local
+    global num_restart, num_flips, num_gsat_choice, num_walk_choice, num_gsat_local,generated_inter
     if len(sys.argv) != 2:
         sys.exit()
     else:
@@ -164,6 +167,7 @@ def main():
         print(f'\tNUM GSAT CHOICE: {num_gsat_choice}')
         print(f'\tNUM WALK CHOICE: {num_walk_choice}')
         print(f'\tNUM LOCAL GSAT FLIP: {num_gsat_local}')
+        print(f'\tNUM_LOCAL_MIN {len(generated_inter)}')
         print('==========')
     else:
         print('UNSATISFIABLE')
