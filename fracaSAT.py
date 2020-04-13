@@ -2,7 +2,7 @@
 import sys
 import random
 
-
+num_restart, num_flips, num_gsat_choice, num_walk_choice, num_gsat_local = 0, 0, 0, 0, 0
 
 class FracaSAT(object):
 
@@ -75,6 +75,7 @@ def get_critical_clauses(clauses, cost_clauses, cost=1):
 
 
 def solver_structure(max_flips, fracasat, algorithm, prob):
+    global num_restart, num_flips
     while True:
         inter = get_rnd_interpretation(fracasat)
         for j in range(max_flips):
@@ -82,11 +83,15 @@ def solver_structure(max_flips, fracasat, algorithm, prob):
             if satisfies(cost_clauses):
                 return inter
             algorithm(inter, cost_clauses, fracasat, prob)
+            num_flips += 1
+        num_restart += 1
 
 
 def gsat(inter, cost_clauses, fracasat, prob):
+    global num_gsat_local
     vars = find_best_flipped_vars(inter, cost_clauses, fracasat)
     if not vars:
+        num_gsat_local += 1
         substitute = random.choice(fracasat.clauses[find_unsat_clause(cost_clauses)])
     else:
         substitute = random.choice(vars)
@@ -106,11 +111,14 @@ def walk_sat(inter, cost_clauses, fracasat, prob):
 
 
 def random_walk_gsat(inter, cost_clauses, fracasat, prob):
+    global num_walk_choice, num_gsat_choice
     current_prob = random.random()
     if current_prob <= prob:
+        num_walk_choice += 1
         unsat_lit = random.choice(fracasat.clauses[find_unsat_clause(cost_clauses)])
         inter[abs(unsat_lit) - 1] = -inter[abs(unsat_lit) - 1]
     else:
+        num_gsat_choice += 1
         gsat(inter, cost_clauses, fracasat, prob)
 
 
@@ -139,6 +147,7 @@ def get_formula(file_name):
 
 
 def main():
+    global num_restart, num_flips, num_gsat_choice, num_walk_choice, num_gsat_local
     if len(sys.argv) != 2:
         sys.exit()
     else:
@@ -149,6 +158,13 @@ def main():
     if inter != None:
         print('s SATISFIABLE')
         print('v', ' '.join(map(str, inter)), 0)
+        print('==========')
+        print(f'\tNUM RESTART: {num_restart}')
+        print(f'\tNUM FLIPS: {num_flips}')
+        print(f'\tNUM GSAT CHOICE: {num_gsat_choice}')
+        print(f'\tNUM WALK CHOICE: {num_walk_choice}')
+        print(f'\tNUM LOCAL GSAT FLIP: {num_gsat_local}')
+        print('==========')
     else:
         print('UNSATISFIABLE')
 
