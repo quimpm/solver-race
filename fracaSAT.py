@@ -1,9 +1,7 @@
 #!/usr/bin/env python3
 import sys
 import random
-from threading import Event, Timer
 
-stop_event = Event()
 
 
 class FracaSAT(object):
@@ -77,16 +75,13 @@ def get_critical_clauses(clauses, cost_clauses, cost=1):
 
 
 def solver_structure(max_flips, fracasat, algorithm, prob):
-    while not stop_event.is_set():
+    while True:
         inter = get_rnd_interpretation(fracasat)
         for j in range(max_flips):
             cost_clauses = calculate_clauses_cost(fracasat, inter)
             if satisfies(cost_clauses):
                 return inter
             algorithm(inter, cost_clauses, fracasat, prob)
-            if stop_event.is_set():
-                break
-    return None
 
 
 def gsat(inter, cost_clauses, fracasat, prob):
@@ -119,7 +114,7 @@ def random_walk_gsat(inter, cost_clauses, fracasat, prob):
         gsat(inter, cost_clauses, fracasat, prob)
 
 
-def get_formula(file_name) -> FracaSAT:
+def get_formula(file_name):
     with open(file_name) as file:
         lines = file.readlines()
         for i, line in enumerate(lines):
@@ -129,8 +124,9 @@ def get_formula(file_name) -> FracaSAT:
                 break
         formula = [[] for _ in range(num_vars + num_vars + 1)]
         for i, clause in enumerate(lines[index_line + 1:]):
-            for lit in clause.split()[:-1]:
-                formula[int(lit)].append(i)
+            if not clause[0].__eq__('c'):
+                for lit in clause.split()[:-1]:
+                    formula[int(lit)].append(i)
         clauses = [list(map(int, c.split()[:-1])) for c in lines[index_line + 1:]]
         not_found = []
         for i, lit in enumerate(formula[1:num_vars + 1]):
@@ -142,21 +138,14 @@ def get_formula(file_name) -> FracaSAT:
         return FracaSAT(formula, num_vars, not_found, num_clauses, clauses)
 
 
-def send_signal():
-    stop_event.set()
-
-
 def main():
     if len(sys.argv) != 2:
         sys.exit()
     else:
         fracaSAT = get_formula(sys.argv[1])
-    t = Timer(600, send_signal)
-    t.start()
     # inter = solver_structure(500, fracaSAT, gsat, 0)
     # inter = solver_structure(500, fracaSAT, walk_sat, 0.5)
     inter = solver_structure(500, fracaSAT, random_walk_gsat, 0.5)
-    t.cancel()
     if inter != None:
         print('s SATISFIABLE')
         print('v', ' '.join(map(str, inter)), 0)
