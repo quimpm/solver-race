@@ -3,7 +3,7 @@ import sys
 import random
 from functools import reduce
 
-num_restart, num_flips, num_gsat_choice, num_walk_choice, num_gsat_local, generated_inter = 0, 0, 0, 0, 0, []
+#num_restart, num_flips, num_gsat_choice, num_walk_choice, num_gsat_local, generated_inter = 0, 0, 0, 0, 0, []
 
 
 class FracaSAT(object):
@@ -78,7 +78,6 @@ def get_critical_clauses(clauses, cost_clauses, cost=1):
 
 
 def solver_structure(max_flips, fracasat, algorithm, prob):
-    global num_restart, num_flips
     while True:
         inter = get_rnd_interpretation(fracasat)
         for j in range(max_flips):
@@ -86,8 +85,6 @@ def solver_structure(max_flips, fracasat, algorithm, prob):
             if satisfies(cost_clauses):
                 return inter
             algorithm(inter, cost_clauses, fracasat, prob)
-            num_flips += 1
-        num_restart += 1
 
 
 def add_all_unsat_clause(fracasat, cost_clause):
@@ -116,18 +113,22 @@ def add_new_clause_inter(fracasat, inter):
 
 
 def gsat(inter, cost_clauses, fracasat, prob):
-    global num_gsat_local, generated_inter
     vars = find_best_flipped_vars(inter, cost_clauses, fracasat)
     if not vars:
-        num_gsat_local += 1
-        if inter not in generated_inter:
-            generated_inter.append(inter)
-        #if random.random() > prob and fracasat.num_first_clauses * 1.2 > fracasat.num_clauses:
-        #    add_all_unsat_clause(fracasat, cost_clauses)
+        #heuristic_stats_gsat(cost_clauses, fracasat, inter, prob)
         substitute = random.choice(fracasat.clauses[find_unsat_clause(cost_clauses)])
     else:
         substitute = random.choice(vars)
     inter[abs(substitute) - 1] = -substitute
+
+
+def heuristic_stats_gsat(cost_clauses, fracasat, inter, prob):
+    global num_gsat_local, generated_inter
+    num_gsat_local += 1
+    if inter not in generated_inter:
+        generated_inter.append(inter)
+    if random.random() > prob and fracasat.num_first_clauses * 1.2 > fracasat.num_clauses:
+        add_all_unsat_clause(fracasat, cost_clauses)
 
 
 def walk_sat(inter, cost_clauses, fracasat, prob):
@@ -143,14 +144,14 @@ def walk_sat(inter, cost_clauses, fracasat, prob):
 
 
 def random_walk_gsat(inter, cost_clauses, fracasat, prob):
-    global num_walk_choice, num_gsat_choice
+    #global num_walk_choice, num_gsat_choice
     current_prob = random.random()
     if current_prob <= prob:
-        num_walk_choice += 1
+        #num_walk_choice += 1
         unsat_lit = random.choice(fracasat.clauses[find_unsat_clause(cost_clauses)])
         inter[abs(unsat_lit) - 1] = -inter[abs(unsat_lit) - 1]
     else:
-        num_gsat_choice += 1
+        #num_gsat_choice += 1
         gsat(inter, cost_clauses, fracasat, 0.8)
 
 
@@ -179,7 +180,7 @@ def get_formula(file_name):
 
 
 def main():
-    global num_restart, num_flips, num_gsat_choice, num_walk_choice, num_gsat_local, generated_inter
+    #global num_restart, num_flips, num_gsat_choice, num_walk_choice, num_gsat_local, generated_inter
     if len(sys.argv) != 2:
         sys.exit()
     else:
@@ -190,7 +191,7 @@ def main():
     if inter != None:
         print('s SATISFIABLE')
         print('v', ' '.join(map(str, inter)), 0)
-        print('==========')
+        """print('==========')
         print(f'\tNUM RESTART: {num_restart}')
         print(f'\tNUM FLIPS: {num_flips}')
         print(f'\tNUM GSAT CHOICE: {num_gsat_choice}')
@@ -198,7 +199,7 @@ def main():
         print(f'\tNUM LOCAL GSAT FLIP: {num_gsat_local}')
         print(f'\tNUM_LOCAL_MIN {len(generated_inter)}')
         print(f'\tNUM TOTAL CLAUSES {fracaSAT.num_clauses}')
-        print('==========')
+        print('==========')"""
     else:
         print('UNSATISFIABLE')
 
