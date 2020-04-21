@@ -178,6 +178,25 @@ def get_formula(file_name):
         return FracaSAT(formula, num_vars, not_found, num_clauses, clauses)
 
 
+def from_clauses(num_vars, clauses):
+    formula = [[] for _ in range(num_vars + num_vars + 1)]
+    for i, clause in enumerate(clauses):
+        for lit in clause:
+            formula[int(lit)].append(i)
+    not_found = []
+    for i, lit in enumerate(formula[1:num_vars + 1]):
+        if not lit:
+            not_found.append(i + 1)
+    for i, lit in enumerate(formula[num_vars + 1:]):
+        if not lit:
+            not_found.append(-i - 1)
+    return FracaSAT(formula, num_vars, not_found, len(clauses), clauses)
+    
+
+def show_inter(inter):
+    print('s SATISFIABLE')
+    print('v', ' '.join(map(str, inter)), 0)
+
 def main():
     global max_flips
     #global num_restart, num_flips, num_gsat_choice, num_walk_choice, num_gsat_local, generated_inter
@@ -189,8 +208,7 @@ def main():
     # inter = solver_structure(500, fracaSAT, walk_sat, 0.5)
     inter = solver_structure(fracaSAT, random_walk_gsat, 0.5)
     if inter != None:
-        print('s SATISFIABLE')
-        print('v', ' '.join(map(str, inter)), 0)
+        show_inter(inter)
         """print('==========')
         print(f'\tNUM RESTART: {num_restart}')
         print(f'\tNUM FLIPS: {num_flips}')
