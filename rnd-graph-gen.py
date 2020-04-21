@@ -43,23 +43,23 @@ class CNF():
 
     def gen_node_clauses(self):
         '''Generate the ALO + AMO clauses for all the nodes'''
-        for n in xrange(self.num_nodes):
+        for n in range(self.num_nodes):
             # ALO
             var1 = n * self.num_colors + 1
-            self.clauses.append([i for i in xrange(var1, var1 + self.num_colors)])
+            self.clauses.append([i for i in range(var1, var1 + self.num_colors)])
             # AMO
-            for v1 in xrange(var1, var1 + self.num_colors - 1):
-                for v2 in xrange(v1 + 1, var1 + self.num_colors):
+            for v1 in range(var1, var1 + self.num_colors - 1):
+                for v2 in range(v1 + 1, var1 + self.num_colors):
                     self.clauses.append([-v1, -v2])
 
     def gen_edge_clauses(self):
         '''Generates the clauses for each pair of nodes that have an edge with certain prob'''
-        for n1 in xrange(self.num_nodes - 1):
-            for n2 in xrange(n1 + 1, self.num_nodes):
+        for n1 in range(self.num_nodes - 1):
+            for n2 in range(n1 + 1, self.num_nodes):
                 if random.random() < self.edge_prob:
                     var1 = n1 * self.num_colors + 1
                     var2 = n2 * self.num_colors + 1
-                    for c in xrange(self.num_colors):
+                    for c in range(self.num_colors):
                         self.clauses.append([-(var1 + c), -(var2 + c)])
 
     def show(self):

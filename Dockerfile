@@ -4,5 +4,7 @@ WORKDIR /app
 RUN apk add pkgconfig graphviz graphviz-dev gcc musl-dev
 COPY requirements.txt /app/
 RUN python3 -m pip install pygraphviz --install-option="--library-path=/usr/lib/graphviz/"
+RUN python3 -m pip install -r requirements.txt
 COPY . /app
-RUN python3 fracaSAT.py ex-graph1.cnf
+RUN python3 show-graph.py
+COPY /app/out.png .
