@@ -5,6 +5,11 @@ import random
 
 # Classes 
 
+class Node:
+
+    def __init__(self, num):
+        self.num
+
 class CNF():
     """A CNF formula randomly generated"""
 
@@ -52,11 +57,19 @@ class CNF():
             sys.stdout.write("%s 0\n" % " ".join(map(str, c)))
 
 # Main
+def create_graph(inter, num_nodes, num_colors):
+    #for v in inter:
+
+
+
 def main():
     if len(sys.argv) < 1:
         output_file = sys.argv[1]
-    if len(sys.argv) == 3:
+    if len(sys.argv) == 6 and sys.argv[3].isdigit():
         cnf_file = sys.argv[2]
+        num_nodes = int(sys.argv[3])
+        edge_prob = int(sys.argv[4])
+        num_colors = int(sys.argv[5])
         fracasat = fracaSAT.get_formula(cnf_file)
     elif len(sys.argv) >= 5 or len(sys.argv) <= 6:
         num_nodes = int(sys.argv[2])
@@ -70,12 +83,14 @@ def main():
         fracasat = fracaSAT.from_clauses(cnf.num_nodes * cnf.num_colors, cnf.clauses)
     else:
         print("Correct USAGE:")
-        print("\t./fracasat-graph-col.py <output-file> <cnf-file>")
+        print("\t./fracasat-graph-col.py <output-file> <cnf-file> <num-nodes> <edge-prob> <num-colors>")
         print("or")
         print("\t./fracasat-graph-col.py <num-nodes> <edge-prob> <num-colors> [random-seed]")
         sys.exit()
     inter = fracaSAT.solver_structure(fracasat, fracaSAT.random_walk_gsat, 0.5)
     fracaSAT.show_inter(inter)
+    #TODO: Llegir num_nomdes i num_colors des del cnf, es pot fer amb num_variables i len(1st clause)
+    create_graph(inter, num_nodes, num_colors)
 
 if __name__ == "__main__":
     main()
