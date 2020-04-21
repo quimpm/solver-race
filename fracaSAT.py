@@ -77,7 +77,8 @@ def get_critical_clauses(clauses, cost_clauses, cost=1):
     return list(filter(lambda x: cost_clauses[x] == cost, clauses))
 
 
-def solver_structure(max_flips, fracasat, algorithm, prob):
+def solver_structure(fracasat, algorithm, prob):
+    max_flips = fracasat.num_vars * 4
     while True:
         inter = get_rnd_interpretation(fracasat)
         for j in range(max_flips):
@@ -187,7 +188,7 @@ def main():
         fracaSAT = get_formula(sys.argv[1])
     # inter = solver_structure(500, fracaSAT, gsat, 0)
     # inter = solver_structure(500, fracaSAT, walk_sat, 0.5)
-    inter = solver_structure(500, fracaSAT, random_walk_gsat, 0.5)
+    inter = solver_structure(fracaSAT, random_walk_gsat, 0.5)
     if inter != None:
         print('s SATISFIABLE')
         print('v', ' '.join(map(str, inter)), 0)
