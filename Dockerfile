@@ -7,4 +7,3 @@ RUN python3 -m pip install pygraphviz --install-option="--library-path=/usr/lib/
 RUN python3 -m pip install -r requirements.txt
 COPY . /app
 RUN python3 show-graph.py
-COPY /app/out.png .
