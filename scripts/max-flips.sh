@@ -10,7 +10,7 @@ do
       for i in {10..35}; do
         t=$(($i*$j))
         printf "\n$t\n"
-        for i in `seq 100`; do
+        for i in `seq 50`; do
           echo -n $(time python3 fracaSAT.py $file $t | grep user)
         done
       done
