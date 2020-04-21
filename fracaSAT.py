@@ -4,7 +4,7 @@ import random
 from functools import reduce
 
 #num_restart, num_flips, num_gsat_choice, num_walk_choice, num_gsat_local, generated_inter = 0, 0, 0, 0, 0, []
-
+max_flips = int(sys.argv[2])
 
 class FracaSAT(object):
 
@@ -78,7 +78,7 @@ def get_critical_clauses(clauses, cost_clauses, cost=1):
 
 
 def solver_structure(fracasat, algorithm, prob):
-    max_flips = fracasat.num_vars * 4
+    global max_flips
     while True:
         inter = get_rnd_interpretation(fracasat)
         for j in range(max_flips):
@@ -181,8 +181,9 @@ def get_formula(file_name):
 
 
 def main():
+    global max_flips
     #global num_restart, num_flips, num_gsat_choice, num_walk_choice, num_gsat_local, generated_inter
-    if len(sys.argv) != 2:
+    if len(sys.argv) < 2:
         sys.exit()
     else:
         fracaSAT = get_formula(sys.argv[1])
