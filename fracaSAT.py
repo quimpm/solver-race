@@ -206,7 +206,7 @@ def main():
         fracaSAT = get_formula(sys.argv[1])
     # inter = solver_structure(500, fracaSAT, gsat, 0)
     # inter = solver_structure(500, fracaSAT, walk_sat, 0.5)
-    inter = solver_structure(fracaSAT, gsat, 0.5)
+    inter = solver_structure(fracaSAT, random_walk_gsat, 0.5)
     if inter != None:
         show_inter(inter)
         """print('==========')
