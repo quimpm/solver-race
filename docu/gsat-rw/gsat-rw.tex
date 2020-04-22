@@ -1,4 +1,17 @@
 \begin{document}
 \subsection{GSAT with Random Walk}
-%TODO Explicar perque s'ha triat aquesta heuristica
+As it shows the graphic REF, this strategy outperforms the other two, this is becouse it gets the best things of both others and put it toghether. Walksat skips better local minimas but it flips randomly the literal to get the next step. And GSAT gets stuked more time in local minimas but it choses better the literal to flip. So basically, this strategy skips a lot of local minimas doing a step up and choses better the literal to flip (with the costs related of doing it).\\
+Here we will show de pseudocode of the strategy:
+\begin{lstlisting}
+for i in max_tries:
+	for j in max_flips
+		if (probability p):
+			pick a variable in some unsat clause
+				 and flip it in the interpretation
+		else:
+			follow the standard GSAT scheme 
+				-> Make the best possible move
+\end{lstlisting}
+\subsubsection{Implementation details}
+
 \end{document}
