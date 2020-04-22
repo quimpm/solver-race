@@ -1,3 +1,9 @@
 \begin{document}
-
+In addition of developing different strategies in order to improving the solver performance, some heuristics have been created.
+These heuristics have been used in order to slightly modify the fracaSAT object. As a result, this heuristics will modify the behaviour of our normal strategy. The main aim of them are not to be again in the same local optimals modifying the cost of these interpretations. These are some of the thoughts heuristics and those which were developed.
+\begin{enumerate}
+\item \textbf{Creating a clause of the negate interpretation} not only will not only improve the cost of the search but also this one will be incremented, as the cost of having the cost of an interpretation will be harder. That is because half of the list of our structure will append a new clause.
+\item \textbf{Repeating a clause} is a more interesting idea as it will not become as hard as the previous one and the length\footnote{number of literals} of the new clause will be the same of the others clauses.
+\item \textbf{Making a clause of the unsatisfied clauses} will prune better than the previous one despite the fact that the cost of getting the cost of the interpretation will be harder.
+\end{enumerate}
 \end{document}
