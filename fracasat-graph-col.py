@@ -76,8 +76,9 @@ def create_dict_color(inter, num_nodes, num_colors):
 
 def get_edges(num_nodes, num_colors, clauses):
     num_min_color = num_nodes
-    num_max_colors = int(num_colors * (num_colors + 1) / 2)
-    return clauses[num_min_color + num_max_colors:]
+    num_max_colors = int(num_colors * (num_colors - 1) / 2)
+    start = num_nodes + num_nodes * num_max_colors
+    return list(map(lambda x: [int(abs(x[0]) / num_nodes + 1), int(abs(x[1]) / num_nodes + 1)], clauses[start:]))
 
 
 def get_random_color():
@@ -87,6 +88,7 @@ def get_random_color():
 
 
 def create_graph(colors, edges, output_file):
+    print(colors, edges)
     G = networkx.Graph()
     for node in colors:
         G.add_node(node)
@@ -102,12 +104,20 @@ def create_graph(colors, edges, output_file):
     for node in colors:
         while color in current_colors:
             color = get_random_color()
-        A.get_node(1).attr['fillcolor'] = color
+        current_colors.append(color)
+        A.get_node(node).attr['fillcolor'] = color
     A.layout()
     A.draw("out.png", format='png')
 
+def correct_usage():
+    print("Correct USAGE:")
+    print("\t./fracasat-graph-col.py <output-file> <cnf-file> <num-nodes> <num-colors>")
+    print("or")
+    print("\t./fracasat-graph-col.py <output-file> <num-nodes> <edge-prob> <num-colors> [random-seed]")
+    sys.exit()
+
 def main():
-    if len(sys.argv) > 1:
+    if len(sys.argv) > 4:
         output_file = sys.argv[1]
     else:
         correct_usage()
@@ -119,12 +129,13 @@ def main():
         clauses = fracasat.clauses
     elif len(sys.argv) >= 5 or len(sys.argv) <= 6:
         num_nodes = int(sys.argv[2])
-        edge_prob = int(sys.argv[3])
+        edge_prob = float(sys.argv[3])
         num_colors = int(sys.argv[4])
         seed = None
         if len(sys.argv) == 6:
             seed = int(sys.argv[5])
         random.seed(seed)
+        print(edge_prob)
         cnf = CNF(num_nodes, edge_prob, num_colors)
         cnf.show()
         fracasat = fracaSAT.from_clauses(cnf.num_nodes * cnf.num_colors, cnf.clauses)
@@ -133,18 +144,11 @@ def main():
         correct_usage()
     inter = fracaSAT.solver_structure(fracasat, fracaSAT.random_walk_gsat, 0.5)
     fracaSAT.show_inter(inter)
-    # TODO: Llegir num_nomdes i num_colors des del cnf, es pot fer amb num_variables i len(1st clause)
     colors = create_dict_color(inter, num_nodes, num_colors)
     edges = get_edges(num_nodes, num_colors, clauses)
     create_graph(colors, edges, output_file)
 
 
-def correct_usage():
-    print("Correct USAGE:")
-    print("\t./fracasat-graph-col.py <output-file> <cnf-file> <num-nodes> <num-colors>")
-    print("or")
-    print("\t./fracasat-graph-col.py <num-nodes> <edge-prob> <num-colors> [random-seed]")
-    sys.exit()
 
 
 if __name__ == "__main__":
