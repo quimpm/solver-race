@@ -58,7 +58,12 @@ return No SAT
 \subsection{Advantages and drawbacks}
 \begin{itemize}
 	\item It changes only those literals which have a better number of unsatisfied clause. 
-	\item The solver can get stuck in a local optimal in every flip.
+	\item The solver can get stuck in a local optimal in every flip. There are some variations of GSAT to avoid this:
+	\begin{itemize}
+		\item Using \textbf{restarts}. Creating a new random interpretation every $n$ loop turns.
+		\item \textbf{Tabu Search}. Using a data structure that contains all the local optimal already visited. It can be powerful although a high amount of memory is needed in large CNF formulas.
+		\item \textbf{GWSAT}.
+	\end{itemize}
 \end{itemize}
 \end{frame}
 
@@ -67,11 +72,13 @@ return No SAT
 \end{frame}
 
 \begin{frame}{Random Walk GSAT}
+\framesubtitle{Algorithm}
 \section{Random Walk GSAT}
 \subsection{Algorithm}
 \end{frame}
 
 \begin{frame}{Random Walk GSAT}
+\framesubtitle{Results}
 \subsection{Results}
 \end{frame}
 
