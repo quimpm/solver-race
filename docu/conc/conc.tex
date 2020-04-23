@@ -1,3 +1,8 @@
 \begin{document}
 %TODO Coses que hem millorat després de la race, i una mica de conclusions denerals dels local search SATS
+After the race we realized that a really important fact for the optimitzation of our sat were the values of max-flips and probability. So we decided to study of what value showld we assign to Max-flips, and we discovered that was the relation: 
+$$num flips = (num clauses / num_lits) * 1000$$ 
+This change makes our SAT a lot faster.\\
+\\
+After all, even though we dont had a good place in the race, at least we had implemented a strategy that seems that works better than the classical ones.
 \end{document}
