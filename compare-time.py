@@ -29,8 +29,7 @@ def read_file(file_name):
 
 def get_diff_files(all_data):
     d50 = list(filter(lambda x: re.search('^exemple-50*',x[0]), all_data))
-    d75 = list(filter(lambda x: re.search('^exemple-75*',x[0]), all_data))
-    return d50, d75
+    return d50
 
 
 def get_name(data):
@@ -40,25 +39,24 @@ def get_comp(data, i):
     return list(map(lambda x: x[i], data))
 
 
-def create_graphic(file1, file2, index):
-    all_data = read_file(file1)
-    normal_data = read_file(file2)
-    da50, da75 = get_diff_files(all_data)
-    dn50, dn75 = get_diff_files(normal_data)
+def create_graphic(file1, file2, file3, index):
+    gsat_data = read_file(file1)
+    walksat_data = read_file(file2)
+    rwgsat_data = read_file(file3)
+    da50 = get_diff_files(gsat_data)
+    dn50 = get_diff_files(walksat_data)
+    dr50 = get_diff_files(rwgsat_data)
     pl.figure(int(index) + 1)
-    pl.plot(get_name(da50), get_comp(da50, 1), 'o-', label="Using all")
-    pl.plot(get_name(dn50), get_comp(dn50, 1), 'o-', label="Using normal")
+    pl.plot(get_name(da50), get_comp(da50, 1), 'o-', label="Using GSAT")
+    pl.plot(get_name(dn50), get_comp(dn50, 1), 'o-', label="Using WalkSAT")
+    pl.plot(get_name(dn50), get_comp(dr50, 1), 'o-', label="Using RWGSAT")
     pl.legend()
     pl.savefig(f'50-graphic-{index}.png')
-    pl.figure(int(index) + 2)
-    pl.plot(get_name(da75), get_comp(da75, 1), 'o-', label="Using all")
-    pl.plot(get_name(dn75), get_comp(dn75, 1), 'o-', label="Using normal")
-    pl.legend()
-    pl.savefig(f'75-graphic-{index}.png')
 
 
 if __name__ == '__main__':
-    ALL = "./all.txt"
-    NORMAL = "./normal.txt"
-    create_graphic(ALL, NORMAL, "1")
+    GSAT = "./scripts/gsat.time"
+    WALKSAT = "./scripts/walksat.time"
+    RWGSAT = "./scripts/rwgsat.time"
+    create_graphic(GSAT, WALKSAT, RWGSAT, "2")
 
