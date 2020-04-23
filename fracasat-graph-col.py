@@ -66,11 +66,10 @@ class CNF():
 def create_dict_color(inter, num_nodes, num_colors):
     current_node = 1
     graph = {}
-    for i, l in enumerate(inter):
-        if l > 0:
-            graph[current_node] = (l - 1) % num_colors
-        if i / num_nodes >= current_node:
-            current_node += 1
+    for n in range(num_nodes):
+        crange = inter[(n)*num_colors:((n+1)*num_colors)]
+        co = list(filter(lambda x: x > 0, crange))[0]
+        graph[n+1]= co 
     return graph
 
 
@@ -78,26 +77,27 @@ def get_edges(num_nodes, num_colors, clauses):
     num_min_color = num_nodes
     num_max_colors = int(num_colors * (num_colors - 1) / 2)
     start = num_nodes + num_nodes * num_max_colors
-    return list(map(lambda x: [int(abs(x[0]) / num_nodes + 1), int(abs(x[1]) / num_nodes + 1)], clauses[start:]))
+    return list(map(lambda x: [int((abs(x[0])-1) / num_colors + 1), int((abs(x[1])- 1) / num_colors + 1)], clauses[start:]))
 
 
 def get_random_color():
     random_number = random.randint(0, 16 ** 6 - 1)
-    hex_number = str(hex(random_number))
-    return f'#{hex_number[2:]}'
+    hex_number = str(hex(random_number))[2:]
+    return f'#{hex_number}'
 
 
 def create_graph(colors, edges, output_file):
-    print(colors, edges)
-    G = networkx.Graph()
+    G = networkx.Graph(ranksep='0.5')
     for node in colors:
-        G.add_node(node)
+        G.add_node(f'{node}: {colors[node]}')
     for edge in edges:
-        G.add_edge(abs(edge[0]), abs(edge[1]))
+        n1 = abs(edge[0])
+        n2 = abs(edge[1])
+        G.add_edge(f'{n1}: {colors[n1]}', f'{n2}: {colors[n2]}')
     A = networkx.nx_agraph.to_agraph(G)
     A.node_attr['style'] = 'filled'
-    A.node_attr['width'] = '0.4'
-    A.node_attr['height'] = '0.4'
+    A.node_attr['width'] = '0.1'
+    A.node_attr['height'] = '0.1'
     A.edge_attr['color'] = '#000000'
     color = '#000000'
     current_colors = ['#000000']
@@ -105,7 +105,7 @@ def create_graph(colors, edges, output_file):
         while color in current_colors:
             color = get_random_color()
         current_colors.append(color)
-        A.get_node(node).attr['fillcolor'] = color
+        A.get_node(f'{node}: {colors[node]}').attr['fillcolor'] = color
     A.layout()
     A.draw("out.png", format='png')
 
@@ -118,6 +118,7 @@ def correct_usage():
 
 def main():
     if len(sys.argv) > 4:
+        print("AAAA")
         output_file = sys.argv[1]
     else:
         correct_usage()
@@ -135,9 +136,8 @@ def main():
         if len(sys.argv) == 6:
             seed = int(sys.argv[5])
         random.seed(seed)
-        print(edge_prob)
         cnf = CNF(num_nodes, edge_prob, num_colors)
-        cnf.show()
+        #cnf.show()
         fracasat = fracaSAT.from_clauses(cnf.num_nodes * cnf.num_colors, cnf.clauses)
         clauses = cnf.clauses
     else:
@@ -146,6 +146,7 @@ def main():
     fracaSAT.show_inter(inter)
     colors = create_dict_color(inter, num_nodes, num_colors)
     edges = get_edges(num_nodes, num_colors, clauses)
+    print(colors, edges)
     create_graph(colors, edges, output_file)
 
 
