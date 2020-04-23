@@ -1,0 +1,8 @@
+\begin{document}
+In order to have efficient functions, there are some data structures that helps the solver to have better efficient functions. All of them are stored in \textit{fracaSAT class}.
+\begin{enumerate}
+\item \textbf{\textit{formula}}. This data structure was given in class. It represents a list of literals in positive and negative that encapsulates a list of clauses that the literal appear. It is a fast way of getting all the clauses that appear a literal.
+\item \textbf{\textit{clauses}}. A list of clauses with their literals. This data structure is needed to get the function cost of every interpretation.
+\item \textbf{\textit{not\_found}}. A list of literals that appear only in negative or positive. This data structure helps the solver to have a minimal set of clauses that evaluates true\footnote{Only if the negate literal appears in the cnf formula.} and to get approach to local optimal.
+\end{enumerate}
+\end{document}
