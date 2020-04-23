@@ -99,10 +99,20 @@ The main drawback of using this strategy combination is that is very similar wit
 \end{flushleft}
 \end{frame}
 
-\begin{frame}{Random Walk GSAT}
+\begin{frame}[fragile]{Random Walk GSAT}
 \framesubtitle{Algorithm}
 \section{Random Walk GSAT}
 \subsection{Algorithm}
+\begin{verbatim}
+for i in max_tries:
+   for j in max_flips:
+      if (probability p):
+         pick a variable in some unsat clause
+           and flip it in the interpretation
+      else:
+         follow the standard GSAT scheme 
+           -> Make the best possible move
+\end{verbatim}
 \end{frame}
 
 \begin{frame}{Random Walk GSAT}
@@ -110,6 +120,20 @@ The main drawback of using this strategy combination is that is very similar wit
 \subsection{Experimental Results}
 
 \includegraphics[width=10cm]{imgs/tab1.png}
+
+\end{frame}
+\begin{frame}{Random Walk GSAT}
+\framesubtitle{Results}
+\subsection{Experimental Results}
+
+\includegraphics[width=10cm]{imgs/50-graphic-2.png}
+
+\end{frame}
+\begin{frame}{Random Walk GSAT}
+\framesubtitle{Results}
+\subsection{Experimental Results}
+
+\includegraphics[width=10cm]{imgs/50-graphic-1.png}
 
 \end{frame}
 \begin{frame}{Conclusions}
