@@ -1,6 +1,6 @@
 \documentclass{beamer}
 \usetheme{Madrid}
-
+\usepackage{ragged2e}
 \usepackage{listings}
 
 
@@ -19,8 +19,10 @@
 \begin{frame}{Introduction}
 \framesubtitle{Why have we chosen this paper?}
 \section{Introduction}
+\textbf{Local Search Strategies for Satisfiability Testing} \\by \textit{Bart Selman}, \textit{Henry Kautz} and \textit{Bram Cohen}.
+\linebreak
 \begin{itemize}
-	\item Interest in:
+	\item Our interest raised in:
 	\begin{itemize}
 		\item  learning some new strategies.
 		\item finding out better implementations of GSAT or WalkSAT for our SAT solver.
@@ -62,13 +64,28 @@ return No SAT
 	\begin{itemize}
 		\item Using \textbf{restarts}. Creating a new random interpretation every $n$ loop turns.
 		\item \textbf{Tabu Search}. Using a data structure that contains all the local optimal already visited. It can be powerful although a high amount of memory is needed in large CNF formulas.
+		\item \textbf{Simulated Annealing}.
 		\item \textbf{GWSAT}.
+		
 	\end{itemize}
 \end{itemize}
 \end{frame}
 
 \begin{frame}{Simulated Annealing}
 \section{Simulated Annealing}
+\begin{flushleft}
+
+At each step, the \textbf{simulated annealing heuristic }considers some neighbouring interpretation called $i_{new}$ of the current interpretation $i_{current}$.
+\\
+
+
+Probabilistically decides between flip to the neighbour or stay. The function that calculate the probability is determined by:
+\end{flushleft}
+\begin{itemize}
+	\item The current interpretation
+	\item The neighbour interpretation
+	\item Number of flips already done in the same restart loop iteration.
+\end{itemize}
 \end{frame}
 
 \begin{frame}{Random Walk GSAT}
