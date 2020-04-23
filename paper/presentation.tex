@@ -1,6 +1,9 @@
 \documentclass{beamer}
 \usetheme{Madrid}
 
+\usepackage{listings}
+
+
 \title{Local Search Strategies for Satisfiability Testing}
 \subtitle{GSAT using Random Walk Strategy}
 \author{by Oriol Alàs and Joaquim Picó}
@@ -8,25 +11,76 @@
 \date{April 2020}
 \begin{document}
 \maketitle
-\begin{frame}{Content}
+\begin{frame}
+\frametitle{Table of Contents}
+\tableofcontents
+\end{frame}
+
+\begin{frame}{Introduction}
+\framesubtitle{Why have we chosen this paper?}
+\section{Introduction}
 \begin{itemize}
-\item What is machine learning? 
-\item Growth of Machine Learning.
-\item Application of machine Learning. 
-\item Classification:  Applications
- \item Top 10 use cases of Machine Learning
- \item What machine learning tools do Kaggle champions use?
-    \item Types of Learning? 
+	\item Interest in:
+	\begin{itemize}
+		\item  learning some new strategies.
+		\item finding out better implementations of GSAT or WalkSAT for our SAT solver.
+	\end{itemize}
+	\item Wanted to know strategies that mixes the given ones in class.
+	\item It talks about simulated annealing and GWSAT strategy.
 \end{itemize}
 \end{frame}
-\begin{frame}{What is Machine learning?}
-\framesubtitle{Why do we need to care about machine learning?}
+\begin{frame}{GSAT}
+\framesubtitle{Characteristics}
+\section{GSAT}
+\subsection{Characteristics}
 \begin{itemize}
-    \item Machine learning (ML) is a category of algorithm that allows software applications to become more accurate in predicting outcomes without being explicitly programmed. The basic premise of machine learning is to build algorithms that can receive input data and use statistical analysis to predict an output while updating outputs as new data becomes available.
-    \item Writing software is the bottleneck, we don’t have enough good developers. Let the data do the work instead of people. Machine learning is the way to make programming scalable.
-    \item Machine Learning is getting computers to program themselves. If programming is automation, then machine learning is automating the process of automation.
+	\item Strategy used for incomplete solvers.
+    \item Searches for the "most" satisfiable interpretation. The interpretation that has the maximum number of clauses evaluated to true.
+\end{itemize}
+\end{frame}
+\begin{frame}[fragile]
+\subsection{Algorithm}
+\begin{verbatim}
+for i:=1 to MAX-TRIES
+   I := random interpretation for F
+   for j:=1 to MAX_FLIPS
+      if I satisfies then return I
+      Flip any variable in I that
+         results in greatest decrease
+         in the number o unsatisfied clauses
+   end for
+end for
+return No SAT
+\end{verbatim}
+\end{frame}
+\begin{frame}{GSAT}
+\framesubtitle{Advantages and drawbacks}
+\subsection{Advantages and drawbacks}
+\begin{itemize}
+	\item It changes only those literals which have a better number of unsatisfied clause. 
+	\item The solver can get stuck in a local optimal in every flip.
 \end{itemize}
 \end{frame}
 
+\begin{frame}{Simulated Annealing}
+\section{Simulated Annealing}
+\end{frame}
 
+\begin{frame}{Random Walk GSAT}
+\section{Random Walk GSAT}
+\subsection{Algorithm}
+\end{frame}
+
+\begin{frame}{Random Walk GSAT}
+\subsection{Results}
+\end{frame}
+
+
+\begin{frame}{Modifying GWSAT}
+\section{Modifying GWSAT}
+\end{frame}
+
+\begin{frame}{Conclusions}
+\section{Conclusions}
+\end{frame}
 \end{document}
