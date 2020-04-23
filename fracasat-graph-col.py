@@ -118,7 +118,6 @@ def correct_usage():
 
 def main():
     if len(sys.argv) > 4:
-        print("AAAA")
         output_file = sys.argv[1]
     else:
         correct_usage()
