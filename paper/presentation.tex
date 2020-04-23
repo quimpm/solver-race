@@ -108,12 +108,36 @@ The main drawback of using this strategy combination is that is very similar wit
 \begin{frame}{Random Walk GSAT}
 \framesubtitle{Results}
 \subsection{Experimental Results}
-
 \includegraphics[width=10cm]{imgs/tab1.png}
+\begin{itemize}
+	\item Little difference in small formulas.
+	\item Best performance in largest formulas.
+\end{itemize}
+\end{frame}
+\begin{frame}{Random Walk GSAT}
+\framesubtitle{Results}
+\subsection{Experimental Results}
+Results of max-cut, max-clique, graph coloring, Hanoi or similar problems.
+\includegraphics[width=10cm]{imgs/tab2.png}
+\end{frame}
+
+\begin{frame}{Random Walk GSAT}
+\framesubtitle{Results}
+\subsection{Experimental Results}
+Resolving problems such as deriving a logical circuit from its input-output behaviour, comparing it with integer-programming method.
+\includegraphics[width=10cm]{imgs/tab3.png}
+\begin{itemize}
+\item Both GWSAT and SA strategies improve significantly upon GSAT.
+\end{itemize}
 
 \end{frame}
+
+
 \begin{frame}{Conclusions}
 \section{Conclusions}
-
+\begin{itemize}
+\item GWSAT is the best option of GSAT variation, including the basic one.
+\item We can convert GWSAT into basic GSAT only changing the probability, but not into WalkSAT, because we don't take into account the probability part.
+\end{itemize}
 \end{frame}
 \end{document}
