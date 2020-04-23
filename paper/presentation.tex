@@ -86,11 +86,17 @@ Probabilistically decides between flip to the neighbour or stay. The function th
 \end{itemize}
 \end{frame}
 \begin{frame}{Simulated Annealing in GSAT}
+\begin{flushleft}
+In order to integrate the simulate annealing algorithm, we can take a reference of this instructions:
+\end{flushleft}
 \begin{enumerate}
 	\item Choose the random variable and get $\delta$\footnote{Cost of flipping}.
 	\item If it is a local optimal, flip the variable with probability $e^{-\frac{\delta}{T}}$ where $T$ is the temperature.
+	\item Then, reduce the temperature multiplying it by a constant factor ($\textless 1$).
 \end{enumerate}
-
+\begin{flushleft}
+The main drawback of using this strategy combination is that is very similar with the basic GSAT.
+\end{flushleft}
 \end{frame}
 
 \begin{frame}{Random Walk GSAT}
@@ -101,15 +107,13 @@ Probabilistically decides between flip to the neighbour or stay. The function th
 
 \begin{frame}{Random Walk GSAT}
 \framesubtitle{Results}
-\subsection{Results}
+\subsection{Experimental Results}
+
+\includegraphics[width=10cm]{imgs/tab1.png}
+
 \end{frame}
-
-
-\begin{frame}{Modifying GWSAT}
-\section{Modifying GWSAT}
-\end{frame}
-
 \begin{frame}{Conclusions}
 \section{Conclusions}
+
 \end{frame}
 \end{document}
