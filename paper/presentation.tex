@@ -77,8 +77,6 @@ return No SAT
 
 At each step, the \textbf{simulated annealing heuristic }considers some neighbouring interpretation called $i_{new}$ of the current interpretation $i_{current}$.
 \\
-
-
 Probabilistically decides between flip to the neighbour or stay. The function that calculate the probability is determined by:
 \end{flushleft}
 \begin{itemize}
@@ -86,6 +84,13 @@ Probabilistically decides between flip to the neighbour or stay. The function th
 	\item The neighbour interpretation
 	\item Number of flips already done in the same restart loop iteration.
 \end{itemize}
+\end{frame}
+\begin{frame}{Simulated Annealing in GSAT}
+\begin{enumerate}
+	\item Choose the random variable and get $\delta$\footnote{Cost of flipping}.
+	\item If it is a local optimal, flip the variable with probability $e^{-\frac{\delta}{T}}$ where $T$ is the temperature.
+\end{enumerate}
+
 \end{frame}
 
 \begin{frame}{Random Walk GSAT}
