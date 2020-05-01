@@ -103,7 +103,6 @@ def create_graph(colors, edges, output_file):
     max_color = max(list(colors.keys()))
     for i in range(max_color):
         current_colors.append(get_random_color())
-    print(current_colors)
     for node, color in colors.items():
         A.get_node(f'{node}: {color}').attr['fillcolor'] = current_colors[color]
     A.layout()
@@ -145,7 +144,6 @@ def main():
     fracaSAT.show_inter(inter)
     colors = create_dict_color(inter, num_nodes, num_colors)
     edges = get_edges(num_nodes, num_colors, clauses)
-    print(colors, edges)
     create_graph(colors, edges, output_file)
 
 
