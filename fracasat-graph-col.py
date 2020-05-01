@@ -68,7 +68,7 @@ def create_dict_color(inter, num_nodes, num_colors):
     graph = {}
     for n in range(num_nodes):
         crange = inter[(n)*num_colors:((n+1)*num_colors)]
-        co = list(filter(lambda x: x > 0, crange))[0]
+        co = list(filter(lambda x: x > 0, crange))[0] % num_colors + 1
         graph[n+1]= co 
     return graph
 
@@ -99,13 +99,13 @@ def create_graph(colors, edges, output_file):
     A.node_attr['width'] = '0.1'
     A.node_attr['height'] = '0.1'
     A.edge_attr['color'] = '#000000'
-    color = '#000000'
     current_colors = ['#000000']
-    for node in colors:
-        while color in current_colors:
-            color = get_random_color()
-        current_colors.append(color)
-        A.get_node(f'{node}: {colors[node]}').attr['fillcolor'] = color
+    max_color = max(list(colors.keys()))
+    for i in range(max_color):
+        current_colors.append(get_random_color())
+    print(current_colors)
+    for node, color in colors.items():
+        A.get_node(f'{node}: {color}').attr['fillcolor'] = current_colors[color]
     A.layout()
     A.draw("out.png", format='png')
 
